@@ -17,13 +17,15 @@ import {
   CardContent
 } from "@mui/material"
 
+import { useStorage } from "@plasmohq/storage/hook"
+
 import { getApiKey } from "./utils/storage"
 import type { GuidanceResponse } from "./utils/gemini"
 
 function Popup() {
-  const [goal, setGoal] = useState("")
+  const [goal, setGoal] = useStorage<string>("userGoal", "")
   const [isLoading, setIsLoading] = useState(false)
-  const [guidance, setGuidance] = useState<GuidanceResponse | null>(null)
+  const [guidance, setGuidance] = useStorage<GuidanceResponse | null>("currentGuidance", null)
   const [hasKey, setHasKey] = useState(false)
   const [isListening, setIsListening] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
@@ -73,16 +75,17 @@ function Popup() {
     }
   }
 
-  const handleGuideMe = async () => {
+  const handleGuideMe = async (isUpdate = false) => {
     if (!goal.trim()) return
 
     setIsLoading(true)
-    setGuidance(null)
+    if (!isUpdate) setGuidance(null) // Only clear if starting fresh
 
     try {
       const response = await chrome.runtime.sendMessage({
         action: "ANALYZE_PAGE",
-        userGoal: goal
+        userGoal: goal,
+        previousContext: isUpdate && guidance ? guidance.steps : null
       })
 
       if (response.error) {
@@ -180,6 +183,18 @@ function Popup() {
           >
             {isLoading ? "Analyzing..." : "Guide Me"}
           </Button>
+
+          {guidance && (
+            <Button
+              variant="outlined"
+              fullWidth
+              sx={{ mt: 1 }}
+              onClick={() => handleGuideMe(true)}
+              disabled={isLoading}
+            >
+              {isLoading ? "Checking..." : "I did it! Check Progress"}
+            </Button>
+          )}
         </Box>
 
         {/* Response Display */}

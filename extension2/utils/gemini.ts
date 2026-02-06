@@ -57,8 +57,9 @@ export const generateGuidance = async (
     previousContext?: any // Placeholder for multi-turn history
 ): Promise<GuidanceResponse> => {
     const genAI = new GoogleGenerativeAI(apiKey)
+    console.log(await fetch(" https://generativelanguage.googleapis.com/v1beta/models/listmodels").then(res => { console.log(res.json()) }))
     const model = genAI.getGenerativeModel({
-        model: "gemini-3-pro-preview",
+        model: "gemini-2.5-flash",
         systemInstruction: SYSTEM_PROMPT,
         generationConfig: { responseMimeType: "application/json" }
     })
@@ -71,7 +72,19 @@ export const generateGuidance = async (
         },
     }
 
-    const prompt = `User Goal: ${userGoal}`
+    let prompt = `User Goal: ${userGoal}`
+
+    if (previousContext) {
+        prompt += `\n\n### Previous Plan & Context
+The user has been following these steps. 
+Analyze the NEW screenshot to determine if the "pending" steps have been completed.
+Update the status of steps to "completed" if visual evidence confirms it.
+Keep the same steps structure but update the status.
+If the previous plan is no longer valid, create a new one.
+
+Previous Steps:
+${JSON.stringify(previousContext, null, 2)}`
+    }
 
     const result = await model.generateContent([prompt, imagePart])
     const text = result.response.text()

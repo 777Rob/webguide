@@ -29,7 +29,8 @@ async function handleAnalyzePage(request: any, sendResponse: (response: any) => 
         const screenshotDataUrl = await chrome.tabs.captureVisibleTab(null, { format: "jpeg", quality: 60 })
 
         // 3. Call Gemini API
-        const guidance = await generateGuidance(apiKey, screenshotDataUrl, userGoal)
+        const { previousContext } = request
+        const guidance = await generateGuidance(apiKey, screenshotDataUrl, userGoal, previousContext)
 
         // 4. Send Response
         sendResponse({ success: true, data: guidance })
