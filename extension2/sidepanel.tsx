@@ -19,25 +19,41 @@ import {
 
 import { useStorage } from "@plasmohq/storage/hook"
 
-import { getApiKey } from "./utils/storage"
+import { getApiKey, getAutoProgress } from "./utils/storage"
 import type { GuidanceResponse } from "./utils/gemini"
 
-function Popup() {
+function SidePanel() {
   const [goal, setGoal] = useStorage<string>("userGoal", "")
   const [isLoading, setIsLoading] = useState(false)
   const [guidance, setGuidance] = useStorage<GuidanceResponse | null>("currentGuidance", null)
   const [hasKey, setHasKey] = useState(false)
   const [isListening, setIsListening] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
+  const [autoProgress, setAutoProgress] = useState(false)
 
   useEffect(() => {
-    checkKey()
+    const init = async () => {
+      const key = await getApiKey()
+      setHasKey(!!key)
+      const auto = await getAutoProgress()
+      setAutoProgress(auto)
+    }
+    init()
   }, [])
 
-  const checkKey = async () => {
-    const key = await getApiKey()
-    setHasKey(!!key)
-  }
+  // Auto-progress polling
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout
+
+    if (autoProgress && guidance && !guidance.completed && !isLoading) {
+      intervalId = setInterval(() => {
+        console.log("Auto-checking progress...")
+        handleGuideMe(true)
+      }, 10000) // 10 seconds
+    }
+
+    return () => clearInterval(intervalId)
+  }, [autoProgress, guidance, isLoading])
 
   const toggleListening = () => {
     if (isListening) {
@@ -143,9 +159,14 @@ function Popup() {
       {/* Header */}
       <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Typography variant="h6" color="primary" fontWeight="bold">WebGuide</Typography>
-        <IconButton size="small" onClick={openOptions}>
-          <Settings size={20} />
-        </IconButton>
+        <Box>
+          <Button size="small" onClick={() => { setGoal(""); setGuidance(null) }} sx={{ mr: 1, textTransform: 'none' }}>
+            New Task
+          </Button>
+          <IconButton size="small" onClick={openOptions}>
+            <Settings size={20} />
+          </IconButton>
+        </Box>
       </Box>
 
       <Box sx={{ p: 2, overflowY: 'auto', flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -177,7 +198,7 @@ function Popup() {
             variant="contained"
             fullWidth
             sx={{ mt: 1 }}
-            onClick={handleGuideMe}
+            onClick={() => handleGuideMe(false)}
             disabled={isLoading}
             startIcon={isLoading ? <CircularProgress size={16} color="inherit" /> : <Send size={16} />}
           >
@@ -272,4 +293,4 @@ function Popup() {
   )
 }
 
-export default Popup
+export default SidePanel

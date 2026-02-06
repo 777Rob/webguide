@@ -12,6 +12,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
 })
 
+// Open Side Panel on Icon Click
+chrome.action.onClicked.addListener((tab) => {
+    chrome.sidePanel.setOptions({
+        tabId: tab.id,
+        path: 'sidepanel.html',
+        enabled: true
+    });
+    chrome.sidePanel.open({ windowId: tab.windowId });
+});
+
 async function handleAnalyzePage(request: any, sendResponse: (response: any) => void) {
     try {
         const { userGoal } = request

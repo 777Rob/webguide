@@ -42,8 +42,10 @@
       "sidePanel"
     ],
     "action": {
-      "default_title": "WebGuide",
-      "default_popup": "popup.html"
+      "default_title": "WebGuide"
+    },
+    "side_panel": {
+      "default_path": "sidepanel.html"
     }
   }
 }

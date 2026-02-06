@@ -1,22 +1,27 @@
 import { useState, useEffect } from "react"
-import { getApiKey, setApiKey } from "./utils/storage"
-import { Box, Button, TextField, Typography, Container, Paper, Alert, Snackbar } from "@mui/material"
+import { getApiKey, setApiKey, getAutoProgress, setAutoProgress } from "./utils/storage"
+import { Box, Button, TextField, Typography, Container, Paper, Alert, Snackbar, FormControlLabel, Switch } from "@mui/material"
 
 function Options() {
     const [apiKey, setApiKeyValue] = useState("")
+    const [autoProgress, setAutoProgressValue] = useState(false)
     const [snackbarOpen, setSnackbarOpen] = useState(false)
 
     useEffect(() => {
-        const loadKey = async () => {
+        const loadSettings = async () => {
             const key = await getApiKey()
             if (key) setApiKeyValue(key)
+
+            const auto = await getAutoProgress()
+            setAutoProgressValue(auto)
         }
-        loadKey()
+        loadSettings()
     }, [])
 
     const handleSave = async () => {
         if (!apiKey) return
         await setApiKey(apiKey)
+        await setAutoProgress(autoProgress)
         setSnackbarOpen(true)
     }
 
@@ -28,7 +33,7 @@ function Options() {
                 </Typography>
 
                 <Typography variant="body1" color="text.secondary">
-                    Enter your Google Gemini API Key to enable the assistant.
+                    Configure your assistant settings.
                 </Typography>
 
                 <TextField
@@ -41,6 +46,17 @@ function Options() {
                     placeholder="Enter your API Key"
                 />
 
+                <FormControlLabel
+                    control={
+                        <Switch
+                            checked={autoProgress}
+                            onChange={(e) => setAutoProgressValue(e.target.checked)}
+                            color="primary"
+                        />
+                    }
+                    label="Auto-detect Progress (Poll every 10s)"
+                />
+
                 <Button
                     variant="contained"
                     color="primary"
@@ -48,7 +64,7 @@ function Options() {
                     onClick={handleSave}
                     fullWidth
                 >
-                    Save API Key
+                    Save Settings
                 </Button>
             </Paper>
 
