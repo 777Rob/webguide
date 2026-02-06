@@ -5,24 +5,41 @@ export { }
 
 console.log("WebGuide Extension 2 Background Service Started")
 
+interface AnalyzePageRequest {
+    action: "ANALYZE_PAGE"
+    userGoal: string
+    previousContext?: any
+}
+
+interface AnalyzePageResponse {
+    success?: boolean
+    data?: any
+    error?: string
+}
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.action === "ANALYZE_PAGE") {
-        handleAnalyzePage(request, sendResponse)
+    if (request && typeof request === "object" && request.action === "ANALYZE_PAGE") {
+        handleAnalyzePage(request as AnalyzePageRequest, sendResponse)
         return true // Keep channel open for async response
     }
+    return false
 })
 
 // Open Side Panel on Icon Click
 chrome.action.onClicked.addListener((tab) => {
-    chrome.sidePanel.setOptions({
-        tabId: tab.id,
-        path: 'sidepanel.html',
-        enabled: true
-    });
-    chrome.sidePanel.open({ windowId: tab.windowId });
+    if (tab.id) {
+        chrome.sidePanel.setOptions({
+            tabId: tab.id,
+            path: 'sidepanel.html',
+            enabled: true
+        });
+        if (tab.windowId) {
+            chrome.sidePanel.open({ windowId: tab.windowId });
+        }
+    }
 });
 
-async function handleAnalyzePage(request: any, sendResponse: (response: any) => void) {
+async function handleAnalyzePage(request: AnalyzePageRequest, sendResponse: (response: AnalyzePageResponse) => void) {
     try {
         const { userGoal } = request
 
@@ -36,7 +53,7 @@ async function handleAnalyzePage(request: any, sendResponse: (response: any) => 
         // 2. Capture Screenshot
         // Note: This requires <all_urls> and activeTab permissions
         // We target the current window's active tab
-        const screenshotDataUrl = await chrome.tabs.captureVisibleTab(null, { format: "jpeg", quality: 60 })
+        const screenshotDataUrl = await chrome.tabs.captureVisibleTab(undefined, { format: "jpeg", quality: 60 })
 
         // 3. Call Gemini API
         const { previousContext } = request
@@ -45,7 +62,7 @@ async function handleAnalyzePage(request: any, sendResponse: (response: any) => 
         // 4. Send Response
         sendResponse({ success: true, data: guidance })
 
-    } catch (error) {
+    } catch (error: any) {
         console.error("Analysis failed:", error)
         sendResponse({ error: error.message || "Unknown error occurred" })
     }

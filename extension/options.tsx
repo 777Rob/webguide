@@ -1,28 +1,24 @@
-import { useState, useEffect } from "react"
-import { getApiKey, setApiKey, getAutoProgress, setAutoProgress } from "./utils/storage"
-import { Box, Button, TextField, Typography, Container, Paper, Alert, Snackbar, FormControlLabel, Switch } from "@mui/material"
+import { Box, Button, TextField, Typography, Container, Paper, Alert, Snackbar, FormControlLabel, Switch, CircularProgress } from "@mui/material"
+import { useOptions } from "./hooks/useOptions"
 
 function Options() {
-    const [apiKey, setApiKeyValue] = useState("")
-    const [autoProgress, setAutoProgressValue] = useState(false)
-    const [snackbarOpen, setSnackbarOpen] = useState(false)
+    const {
+        apiKey,
+        setApiKey,
+        autoProgress,
+        setAutoProgress,
+        snackbarOpen,
+        closeSnackbar,
+        saveSettings,
+        isLoading
+    } = useOptions()
 
-    useEffect(() => {
-        const loadSettings = async () => {
-            const key = await getApiKey()
-            if (key) setApiKeyValue(key)
-
-            const auto = await getAutoProgress()
-            setAutoProgressValue(auto)
-        }
-        loadSettings()
-    }, [])
-
-    const handleSave = async () => {
-        if (!apiKey) return
-        await setApiKey(apiKey)
-        await setAutoProgress(autoProgress)
-        setSnackbarOpen(true)
+    if (isLoading) {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <CircularProgress />
+            </Box>
+        )
     }
 
     return (
@@ -42,7 +38,7 @@ function Options() {
                     variant="outlined"
                     fullWidth
                     value={apiKey}
-                    onChange={(e) => setApiKeyValue(e.target.value)}
+                    onChange={(e) => setApiKey(e.target.value)}
                     placeholder="Enter your API Key"
                 />
 
@@ -50,7 +46,7 @@ function Options() {
                     control={
                         <Switch
                             checked={autoProgress}
-                            onChange={(e) => setAutoProgressValue(e.target.checked)}
+                            onChange={(e) => setAutoProgress(e.target.checked)}
                             color="primary"
                         />
                     }
@@ -61,7 +57,7 @@ function Options() {
                     variant="contained"
                     color="primary"
                     size="large"
-                    onClick={handleSave}
+                    onClick={saveSettings}
                     fullWidth
                 >
                     Save Settings
@@ -71,10 +67,10 @@ function Options() {
             <Snackbar
                 open={snackbarOpen}
                 autoHideDuration={2000}
-                onClose={() => setSnackbarOpen(false)}
+                onClose={closeSnackbar}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
             >
-                <Alert onClose={() => setSnackbarOpen(false)} severity="success" sx={{ width: '100%' }}>
+                <Alert onClose={closeSnackbar} severity="success" sx={{ width: '100%' }}>
                     API Key saved successfully!
                 </Alert>
             </Snackbar>
