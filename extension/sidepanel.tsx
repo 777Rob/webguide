@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Settings, Sun, Moon } from "lucide-react"
+import { Settings, Sun, Moon, RotateCcw } from "lucide-react"
 import { Box, Button, IconButton, Typography } from "@mui/material"
 import { useStorage } from "@plasmohq/storage/hook"
 
@@ -80,16 +80,16 @@ function SidePanelContent() {
     <Box sx={{ width: 400, height: 600, display: 'flex', flexDirection: 'column', bgcolor: 'background.default', color: 'text.primary', overflow: 'hidden' }}>
 
       {/* Header */}
-      <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography variant="h6" color="primary" fontWeight="bold">WebGuide</Typography>
-        <Box>
-          <IconButton size="small" onClick={toggleTheme} sx={{ mr: 1 }}>
+      <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Typography variant="h6" color="text.primary" fontWeight="bold">WebGuide</Typography>
+        <Box sx={{ display: 'flex', gap: 0.5 }}>
+          <IconButton size="small" onClick={toggleTheme} sx={{ color: 'text.secondary' }}>
             {mode === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
           </IconButton>
-          <Button size="small" onClick={handleReset} sx={{ mr: 1, textTransform: 'none' }}>
-            New Task
-          </Button>
-          <IconButton size="small" onClick={openOptions}>
+          <IconButton size="small" onClick={handleReset} sx={{ color: 'text.secondary' }}>
+            <RotateCcw size={20} />
+          </IconButton>
+          <IconButton size="small" onClick={openOptions} sx={{ color: 'text.secondary' }}>
             <Settings size={20} />
           </IconButton>
         </Box>

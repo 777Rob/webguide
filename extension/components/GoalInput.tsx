@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, TextField, Typography, CircularProgress } from "@mui/material"
+import { Box, Button, IconButton, TextField, Typography, CircularProgress, Paper } from "@mui/material"
 import { Mic, Send, Volume2 } from "lucide-react"
 
 interface GoalInputProps {
@@ -21,18 +21,29 @@ export const GoalInput = ({
     hasGuidance
 }: GoalInputProps) => {
     return (
-        <Box>
-            <Typography variant="subtitle2" fontWeight="bold" gutterBottom>What is your goal?</Typography>
-            <Box sx={{ position: 'relative' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+            <Typography variant="subtitle2" fontWeight="600" color="text.primary">What is your goal?</Typography>
+            <Paper
+                elevation={0}
+                sx={{
+                    position: 'relative',
+                    bgcolor: 'action.hover',
+                    borderRadius: 3,
+                    p: 0.5
+                }}
+            >
                 <TextField
                     fullWidth
                     multiline
-                    rows={2}
+                    minRows={2}
                     placeholder="e.g., 'How do I join this hackathon?'"
                     value={goal}
                     onChange={(e) => onGoalChange(e.target.value)}
-                    variant="outlined"
-                    size="small"
+                    variant="standard"
+                    InputProps={{
+                        disableUnderline: true,
+                        sx: { px: 1.5, py: 1, fontSize: '0.95rem' }
+                    }}
                 />
                 <IconButton
                     onClick={onToggleListening}
@@ -42,11 +53,13 @@ export const GoalInput = ({
                 >
                     <Mic size={18} />
                 </IconButton>
-            </Box>
+            </Paper>
+
             <Button
                 variant="contained"
                 fullWidth
-                sx={{ mt: 1 }}
+                disableElevation
+                sx={{ borderRadius: 8, py: 1, mt: 0.5 }}
                 onClick={() => onGuideMe(false)}
                 disabled={isLoading}
                 startIcon={isLoading ? <CircularProgress size={16} color="inherit" /> : <Send size={16} />}
@@ -56,13 +69,13 @@ export const GoalInput = ({
 
             {hasGuidance && (
                 <Button
-                    variant="outlined"
+                    variant="text"
                     fullWidth
-                    sx={{ mt: 1 }}
+                    sx={{ borderRadius: 8, color: 'text.secondary' }}
                     onClick={() => onGuideMe(true)}
                     disabled={isLoading}
                 >
-                    {isLoading ? "Checking..." : "I did it! Check Progress"}
+                    {isLoading ? "Checking..." : "Check Progress"}
                 </Button>
             )}
         </Box>
