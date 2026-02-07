@@ -39,6 +39,20 @@ chrome.action.onClicked.addListener((tab) => {
     }
 });
 
+// Detect Page Navigation for Smart Auto-Progress
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    if (changeInfo.status === 'complete' && tab.active) {
+        // Broadcast to sidepanel (and other parts) that a navigation occurred
+        chrome.runtime.sendMessage({
+            action: "PAGE_CHANGED",
+            tabId,
+            url: tab.url
+        }).catch(() => {
+            // Ignore error if no receivers (sidepanel closed)
+        })
+    }
+})
+
 async function handleAnalyzePage(request: AnalyzePageRequest, sendResponse: (response: AnalyzePageResponse) => void) {
     try {
         const { userGoal } = request

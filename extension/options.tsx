@@ -1,7 +1,9 @@
 import { Box, Button, TextField, Typography, Container, Paper, Alert, Snackbar, FormControlLabel, Switch, CircularProgress } from "@mui/material"
 import { useOptions } from "./hooks/useOptions"
 
-function Options() {
+import { CustomThemeProvider } from "./theme"
+
+function OptionsContent() {
     const {
         apiKey,
         setApiKey,
@@ -15,15 +17,15 @@ function Options() {
 
     if (isLoading) {
         return (
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', bgcolor: 'background.default' }}>
                 <CircularProgress />
             </Box>
         )
     }
 
     return (
-        <Container maxWidth="sm" sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100vh', bgcolor: '#f5f5f5' }}>
-            <Paper elevation={3} sx={{ p: 4, display: 'flex', flexDirection: 'column', gap: 3 }}>
+        <Container maxWidth="sm" sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100vh', bgcolor: 'background.default' }}>
+            <Paper elevation={3} sx={{ p: 4, display: 'flex', flexDirection: 'column', gap: 3, bgcolor: 'background.paper' }}>
                 <Typography variant="h4" component="h1" gutterBottom color="primary" fontWeight="bold">
                     WebGuide Settings
                 </Typography>
@@ -75,6 +77,14 @@ function Options() {
                 </Alert>
             </Snackbar>
         </Container>
+    )
+}
+
+function Options() {
+    return (
+        <CustomThemeProvider>
+            <OptionsContent />
+        </CustomThemeProvider>
     )
 }
 

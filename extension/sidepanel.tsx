@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Settings } from "lucide-react"
+import { Settings, Sun, Moon } from "lucide-react"
 import { Box, Button, IconButton, Typography } from "@mui/material"
 import { useStorage } from "@plasmohq/storage/hook"
 
@@ -12,11 +12,16 @@ import { useGuidance } from "./hooks/useGuidance"
 import { WelcomeView } from "./components/WelcomeView"
 import { GoalInput } from "./components/GoalInput"
 import { ResponseDisplay } from "./components/ResponseDisplay"
+import { CustomThemeProvider, useThemeMode } from "./theme"
 
-function SidePanel() {
+
+function SidePanelContent() {
   const [goal, setGoal] = useStorage<string>("userGoal", "")
   const [hasKey, setHasKey] = useState(false)
   const [autoProgress, setAutoProgress] = useState(false)
+
+  // Theme hook
+  const { mode, toggleTheme } = useThemeMode()
 
   // Storage hook for guidance persistence
   const [guidance, setGuidance] = useStorage<GuidanceResponse | null>("currentGuidance", null)
@@ -41,28 +46,16 @@ function SidePanel() {
     onError: (err) => console.error("Speech error", err)
   })
 
+  // useGuidance handles the "smart" auto-progress internally now
   const {
     isLoading,
     handleGuideMe,
     speak
   } = useGuidance({
     goal,
-    onGuidanceUpdate: (data) => setGuidance(data)
+    onGuidanceUpdate: (data) => setGuidance(data),
+    autoProgress
   })
-
-  // Auto-progress polling
-  useEffect(() => {
-    let intervalId: NodeJS.Timeout
-
-    if (autoProgress && guidance && !guidance.completed && !isLoading) {
-      intervalId = setInterval(() => {
-        console.log("Auto-checking progress...")
-        handleGuideMe(guidance, true)
-      }, 10000) // 10 seconds
-    }
-
-    return () => clearInterval(intervalId)
-  }, [autoProgress, guidance, isLoading, handleGuideMe])
 
   // Handlers
   const handleStartGuidance = async (isUpdate: boolean) => {
@@ -84,12 +77,15 @@ function SidePanel() {
   }
 
   return (
-    <Box sx={{ width: 400, height: 600, display: 'flex', flexDirection: 'column', bgcolor: 'background.paper', overflow: 'hidden' }}>
+    <Box sx={{ width: 400, height: 600, display: 'flex', flexDirection: 'column', bgcolor: 'background.default', color: 'text.primary', overflow: 'hidden' }}>
 
       {/* Header */}
       <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Typography variant="h6" color="primary" fontWeight="bold">WebGuide</Typography>
         <Box>
+          <IconButton size="small" onClick={toggleTheme} sx={{ mr: 1 }}>
+            {mode === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+          </IconButton>
           <Button size="small" onClick={handleReset} sx={{ mr: 1, textTransform: 'none' }}>
             New Task
           </Button>
@@ -122,6 +118,14 @@ function SidePanel() {
 
       </Box>
     </Box>
+  )
+}
+
+function SidePanel() {
+  return (
+    <CustomThemeProvider>
+      <SidePanelContent />
+    </CustomThemeProvider>
   )
 }
 

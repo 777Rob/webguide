@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Box, Button, Paper, Typography, Stepper, Step, StepLabel, Card, CardContent, Collapse } from "@mui/material"
+import { Box, Button, Paper, Typography, Stepper, Step, StepLabel, Card, CardContent, Collapse, useTheme, alpha } from "@mui/material"
 import { Volume2, ChevronDown, ChevronUp } from "lucide-react"
 import type { GuidanceResponse } from "../utils/gemini"
 
@@ -10,14 +10,15 @@ interface ResponseDisplayProps {
 
 export const ResponseDisplay = ({ guidance, onSpeak }: ResponseDisplayProps) => {
     const [showDetails, setShowDetails] = useState(false)
+    const theme = useTheme()
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
 
             {/* Spoken Guidance Player */}
-            <Paper variant="outlined" sx={{ p: 1.5, display: 'flex', alignItems: 'center', gap: 1.5, bgcolor: '#f8f9fa' }}>
-                <Volume2 size={20} color="#1976d2" />
-                <Typography variant="body2" sx={{ flexGrow: 1 }}>{guidance.spoken_guidance}</Typography>
+            <Paper variant="outlined" sx={{ p: 1.5, display: 'flex', alignItems: 'center', gap: 1.5, bgcolor: 'background.paper' }}>
+                <Volume2 size={20} color={theme.palette.primary.main} />
+                <Typography variant="body2" sx={{ flexGrow: 1, color: 'text.primary' }}>{guidance.spoken_guidance}</Typography>
                 <Button size="small" onClick={() => onSpeak(guidance.spoken_guidance)} sx={{ minWidth: 'auto' }}>Replay</Button>
             </Paper>
 
@@ -32,13 +33,13 @@ export const ResponseDisplay = ({ guidance, onSpeak }: ResponseDisplayProps) => 
                         {guidance.steps.map((step, index) => (
                             <Step key={index} active={true} expanded={true}>
                                 <StepLabel icon={
-                                    <div style={{
+                                    <Box sx={{
                                         width: 12, height: 12, borderRadius: '50%',
-                                        background: step.status === 'completed' ? '#1976d2' : '#e0e0e0',
-                                        border: step.status === 'completed' ? 'none' : '2px solid #bdbdbd'
+                                        bgcolor: step.status === 'completed' ? 'primary.main' : 'action.disabledBackground',
+                                        border: step.status === 'completed' ? 'none' : `2px solid ${theme.palette.divider}`
                                     }} />
                                 }>
-                                    <Typography variant="body2" fontWeight="medium">{step.description}</Typography>
+                                    <Typography variant="body2" fontWeight="medium" color="text.primary">{step.description}</Typography>
                                 </StepLabel>
                             </Step>
                         ))}
@@ -49,15 +50,15 @@ export const ResponseDisplay = ({ guidance, onSpeak }: ResponseDisplayProps) => 
             {/* Detailed Guidance Accordion */}
             <Card variant="outlined">
                 <Box
-                    sx={{ p: 1.5, display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', bgcolor: '#f5f5f5' }}
+                    sx={{ p: 1.5, display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', bgcolor: 'action.hover' }}
                     onClick={() => setShowDetails(!showDetails)}
                 >
-                    <Typography variant="subtitle2" fontWeight="bold">Detailed Guidance</Typography>
+                    <Typography variant="subtitle2" fontWeight="bold" color="text.primary">Detailed Guidance</Typography>
                     {showDetails ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                 </Box>
                 <Collapse in={showDetails}>
-                    <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
-                        <Typography variant="body2" style={{ whiteSpace: 'pre-wrap' }}>
+                    <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, bgcolor: 'background.paper' }}>
+                        <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap', color: 'text.primary' }}>
                             {guidance.text_guidance}
                         </Typography>
                         {guidance.reasoning && (
@@ -72,9 +73,16 @@ export const ResponseDisplay = ({ guidance, onSpeak }: ResponseDisplayProps) => 
             </Card>
 
             {/* Next Steps */}
-            <Paper elevation={0} sx={{ p: 2, bgcolor: '#e3f2fd', borderLeft: 4, borderColor: '#2196f3' }}>
+            <Paper elevation={0} sx={{
+                p: 2,
+                bgcolor: alpha(theme.palette.primary.main, 0.08),
+                borderLeft: 4,
+                borderColor: 'primary.main'
+            }}>
                 <Typography variant="subtitle2" fontWeight="bold" color="primary">Next Step:</Typography>
-                <Typography variant="body2" color="#0d47a1">{guidance.next_steps}</Typography>
+                <Typography variant="body2" sx={{ color: theme.palette.mode === 'dark' ? 'primary.light' : 'primary.dark' }}>
+                    {guidance.next_steps}
+                </Typography>
             </Paper>
 
         </Box>
