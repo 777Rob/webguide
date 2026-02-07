@@ -114,7 +114,7 @@ function SidePanelContent() {
           <Box sx={{ mb: 1 }}>
             <Typography variant="caption" color="text.secondary" fontWeight="bold">ACTIVE GOAL</Typography>
             <Paper elevation={0} sx={{ p: 1.5, bgcolor: 'action.selected', borderRadius: 2, mt: 0.5 }}>
-              <Typography variant="body2" fontWeight="500">{goal}</Typography>
+              <Typography variant="body2" fontWeight="500">{guidance.title || goal}</Typography>
             </Paper>
           </Box>
         )}

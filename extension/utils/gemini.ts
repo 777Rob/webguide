@@ -14,6 +14,7 @@ Instead, ask them to perform the action and then click "Check Progress" or "Send
 
 ### Output Format (Strict JSON)
 {
+  "title": "Short, action-oriented title (e.g. 'Sign up for Devpost')",
   "reasoning": "Step-by-step thought process with Thinking Levels. Transparent analysis of screenshot and planning.",
   "spoken_guidance": "Natural spoken response (2-3 sentences, friendly).",
   "text_guidance": "Detailed bullet points if needed.",
@@ -36,6 +37,7 @@ Never hallucinate unseen elements. Prioritize accuracy.
 `
 
 export interface GuidanceResponse {
+    title: string
     reasoning: string
     spoken_guidance: string
     text_guidance: string
