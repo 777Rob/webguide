@@ -68,20 +68,29 @@ async function handleAnalyzePage(request: AnalyzePageRequest, sendResponse: (res
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
         let pageContent = ""
 
-        if (tab?.id) {
-            try {
-                const results = await chrome.scripting.executeScript({
-                    target: { tabId: tab.id },
-                    func: () => {
-                        return document.body.innerText || ""
+        if (tab?.id && tab.url) {
+            // Skip execution on restricted pages (chrome://, edge://, etc.)
+            const isRestrictedUrl = tab.url.startsWith("chrome:") ||
+                tab.url.startsWith("edge:") ||
+                tab.url.startsWith("about:") ||
+                tab.url.startsWith("moz-extension:") ||
+                tab.url.startsWith("view-source:")
+
+            if (!isRestrictedUrl) {
+                try {
+                    const results = await chrome.scripting.executeScript({
+                        target: { tabId: tab.id },
+                        func: () => {
+                            return document.body.innerText || ""
+                        }
+                    })
+                    if (results && results[0] && results[0].result) {
+                        pageContent = results[0].result
                     }
-                })
-                if (results && results[0] && results[0].result) {
-                    pageContent = results[0].result
+                } catch (e) {
+                    // Just log and continue - this is not critical
+                    console.warn("Could not extract page content", e)
                 }
-            } catch (e) {
-                console.error("Failed to extract page content:", e)
-                // Continue without page content if extraction fails (e.g. restricted chrome:// pages)
             }
         }
 

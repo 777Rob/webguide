@@ -37,8 +37,8 @@ export const CustomThemeProvider = ({ children }: { children: ReactNode }) => {
             <CssBaseline />
             <GlobalStyles styles={{
                 html: { height: "100%", width: "100%", margin: 0, padding: 0 },
-                body: { height: "100%", width: "100%", margin: 0, padding: 0 },
-                "#__plasmo": { height: "100%", width: "100%" } // Plasmo default root
+                body: { height: "100%", width: "100%", margin: 0, padding: 0, display: "flex", flexDirection: "column" },
+                "#__plasmo": { height: "100%", width: "100%", display: "flex", flexDirection: "column", flexGrow: 1 } // Plasmo default root
             }} />
             {children}
         </ThemeProvider>
