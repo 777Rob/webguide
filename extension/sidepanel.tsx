@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Settings, Sun, Moon, RotateCcw } from "lucide-react"
+import { Settings, Sun, Moon, RotateCcw, Pause, Play } from "lucide-react"
 import { Box, Button, IconButton, Paper, Typography } from "@mui/material"
 import { useStorage } from "@plasmohq/storage/hook"
 
@@ -55,7 +55,9 @@ function SidePanelContent() {
   const {
     isLoading,
     handleGuideMe,
-    speak
+    speak,
+    isPaused,
+    togglePause
   } = useGuidance({
     goal,
     onGuidanceUpdate: (data) => setGuidance(data),
@@ -112,8 +114,26 @@ function SidePanelContent() {
         {/* Active Goal Display (Only when guidance exists) */}
         {guidance && (
           <Box sx={{ mb: 1 }}>
-            <Typography variant="caption" color="text.secondary" fontWeight="bold">ACTIVE GOAL</Typography>
-            <Paper elevation={0} sx={{ p: 1.5, bgcolor: 'action.selected', borderRadius: 2, mt: 0.5 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
+              <Typography variant="caption" color="text.secondary" fontWeight="bold">ACTIVE GOAL</Typography>
+              {/* Pause/Resume Button */}
+              {autoProgress && (
+                <Button
+                  size="small"
+                  startIcon={isPaused ? <Play size={14} /> : <Pause size={14} />}
+                  onClick={togglePause}
+                  sx={{
+                    minWidth: 0,
+                    p: 0.5,
+                    fontSize: '0.75rem',
+                    color: isPaused ? 'warning.main' : 'text.secondary'
+                  }}
+                >
+                  {isPaused ? "Resume Agent" : "Pause Agent"}
+                </Button>
+              )}
+            </Box>
+            <Paper elevation={0} sx={{ p: 1.5, bgcolor: 'action.selected', borderRadius: 2 }}>
               <Typography variant="body2" fontWeight="500">{guidance.title || goal}</Typography>
             </Paper>
           </Box>

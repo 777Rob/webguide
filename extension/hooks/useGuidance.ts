@@ -93,10 +93,29 @@ export const useGuidance = ({ goal, onGuidanceUpdate, autoProgress }: UseGuidanc
 
     // --- Smart Auto-Progress Logic ---
 
+    const [isPaused, setIsPaused] = useState(false)
+
+    const togglePause = useCallback(() => {
+        setIsPaused(prev => {
+            const newState = !prev
+            if (newState) {
+                stopSpeaking()
+                if (scheduledUpdateRef.current) {
+                    clearTimeout(scheduledUpdateRef.current)
+                    scheduledUpdateRef.current = null
+                }
+            } else {
+                // Resumed - valid to restart check if needed, but let's wait for next event or manual trigger
+            }
+            return newState
+        })
+    }, [stopSpeaking])
+
+    // Update autoProgress logic to respect isPaused
     useEffect(() => {
         // 1. Navigation Listener
         const handlePageChange = (request: any) => {
-            if (request.action === "PAGE_CHANGED" && autoProgress && !isLoading) {
+            if (request.action === "PAGE_CHANGED" && autoProgress && !isLoading && !isPaused) {
                 const guidance = latestGuidanceRef.current
                 if (guidance && !guidance.completed) {
                     console.log("WebGuide: Navigation detected, checking progress...")
@@ -107,12 +126,11 @@ export const useGuidance = ({ goal, onGuidanceUpdate, autoProgress }: UseGuidanc
         chrome.runtime.onMessage.addListener(handlePageChange)
 
         return () => chrome.runtime.onMessage.removeListener(handlePageChange)
-    }, [autoProgress, isLoading, handleGuideMe])
+    }, [autoProgress, isLoading, handleGuideMe, isPaused])
 
     useEffect(() => {
         // 2. 30-Second Timeout after completion
-        // Only schedule if autoProgress is ON, we are NOT loading, and we have incomplete guidance
-        if (autoProgress && !isLoading && latestGuidanceRef.current && !latestGuidanceRef.current.completed) {
+        if (autoProgress && !isLoading && !isPaused && latestGuidanceRef.current && !latestGuidanceRef.current.completed) {
             if (!scheduledUpdateRef.current) {
                 console.log("WebGuide: Scheduling check in 30s")
                 scheduledUpdateRef.current = setTimeout(() => {
@@ -122,27 +140,27 @@ export const useGuidance = ({ goal, onGuidanceUpdate, autoProgress }: UseGuidanc
                 }, 30000)
             }
         } else {
-            // If conditions change (e.g. user turned off auto-progress), clear schedule
             if (scheduledUpdateRef.current) {
                 clearTimeout(scheduledUpdateRef.current)
                 scheduledUpdateRef.current = null
             }
         }
 
-        // Cleanup on unmount or deps change
         return () => {
             if (scheduledUpdateRef.current) {
                 clearTimeout(scheduledUpdateRef.current)
                 scheduledUpdateRef.current = null
             }
         }
-    }, [autoProgress, isLoading, handleGuideMe]) // latestGuidanceRef is stable
+    }, [autoProgress, isLoading, handleGuideMe, isPaused])
 
     return {
         isLoading,
         error,
         handleGuideMe,
         speak,
-        stopSpeaking
+        stopSpeaking,
+        isPaused,
+        togglePause
     }
 }
