@@ -64,14 +64,32 @@ async function handleAnalyzePage(request: AnalyzePageRequest, sendResponse: (res
             return
         }
 
-        // 2. Capture Screenshot
-        // Note: This requires <all_urls> and activeTab permissions
-        // We target the current window's active tab
+        // 2. Capture Screenshot and Page Content
+        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
+        let pageContent = ""
+
+        if (tab?.id) {
+            try {
+                const results = await chrome.scripting.executeScript({
+                    target: { tabId: tab.id },
+                    func: () => {
+                        return document.body.innerText || ""
+                    }
+                })
+                if (results && results[0] && results[0].result) {
+                    pageContent = results[0].result
+                }
+            } catch (e) {
+                console.error("Failed to extract page content:", e)
+                // Continue without page content if extraction fails (e.g. restricted chrome:// pages)
+            }
+        }
+
         const screenshotDataUrl = await chrome.tabs.captureVisibleTab(undefined, { format: "jpeg", quality: 60 })
 
         // 3. Call Gemini API
         const { previousContext } = request
-        const guidance = await generateGuidance(apiKey, screenshotDataUrl, userGoal, previousContext)
+        const guidance = await generateGuidance(apiKey, screenshotDataUrl, userGoal, pageContent, previousContext)
 
         // 4. Send Response
         sendResponse({ success: true, data: guidance })

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { Settings, Sun, Moon, RotateCcw } from "lucide-react"
-import { Box, Button, IconButton, Typography } from "@mui/material"
+import { Box, Button, IconButton, Paper, Typography } from "@mui/material"
 import { useStorage } from "@plasmohq/storage/hook"
 
 import { getApiKey, getAutoProgress } from "./utils/storage"
@@ -19,6 +19,7 @@ function SidePanelContent() {
   const [goal, setGoal] = useStorage<string>("userGoal", "")
   const [hasKey, setHasKey] = useState(false)
   const [autoProgress, setAutoProgress] = useState(false)
+  const [chatInput, setChatInput] = useState("")
 
   // Theme hook
   const { mode, toggleTheme } = useThemeMode()
@@ -36,13 +37,17 @@ function SidePanelContent() {
     }
     init()
   }, [])
-
-  // Custom Hooks
   const {
     isListening,
     toggleListening
   } = useSpeechRecognition({
-    onResult: (transcript) => setGoal(transcript),
+    onResult: (transcript) => {
+      if (guidance) {
+        setChatInput(transcript)
+      } else {
+        setGoal(transcript)
+      }
+    },
     onError: (err) => console.error("Speech error", err)
   })
 
@@ -58,9 +63,15 @@ function SidePanelContent() {
   })
 
   // Handlers
-  const handleStartGuidance = async (isUpdate: boolean) => {
-    if (!isUpdate) setGuidance(null)
-    await handleGuideMe(guidance, isUpdate)
+  const handleStartGuidance = async (isUpdate: boolean, customPrompt?: string) => {
+    if (!isUpdate) {
+      setGuidance(null)
+      await handleGuideMe(null, false)
+    } else {
+      // If it's an update (follow-up), pass the custom prompt
+      await handleGuideMe(guidance, true, customPrompt)
+      setChatInput("") // Clear chat input after sending
+    }
   }
 
   const openOptions = () => {
@@ -69,6 +80,7 @@ function SidePanelContent() {
 
   const handleReset = () => {
     setGoal("")
+    setChatInput("")
     setGuidance(null)
   }
 
@@ -77,7 +89,7 @@ function SidePanelContent() {
   }
 
   return (
-    <Box sx={{ width: 400, height: 600, display: 'flex', flexDirection: 'column', bgcolor: 'background.default', color: 'text.primary', overflow: 'hidden' }}>
+    <Box sx={{ width: '100%', height: '100vh', display: 'flex', flexDirection: 'column', bgcolor: 'background.default', color: 'text.primary', overflow: 'hidden' }}>
 
       {/* Header */}
       <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -97,15 +109,27 @@ function SidePanelContent() {
 
       <Box sx={{ p: 2, overflowY: 'auto', flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
 
-        {/* Goal Input Section */}
+        {/* Active Goal Display (Only when guidance exists) */}
+        {guidance && (
+          <Box sx={{ mb: 1 }}>
+            <Typography variant="caption" color="text.secondary" fontWeight="bold">ACTIVE GOAL</Typography>
+            <Paper elevation={0} sx={{ p: 1.5, bgcolor: 'action.selected', borderRadius: 2, mt: 0.5 }}>
+              <Typography variant="body2" fontWeight="500">{goal}</Typography>
+            </Paper>
+          </Box>
+        )}
+
+        {/* Input Section - Changes based on state */}
         <GoalInput
-          goal={goal}
-          onGoalChange={setGoal}
-          onGuideMe={handleStartGuidance}
+          value={guidance ? chatInput : goal}
+          onChange={guidance ? setChatInput : setGoal}
+          onSubmit={() => handleStartGuidance(!!guidance, guidance ? chatInput : undefined)}
           isLoading={isLoading}
           isListening={isListening}
           onToggleListening={toggleListening}
-          hasGuidance={!!guidance}
+          label={guidance ? "Ask a follow-up or update status" : "What is your goal?"}
+          placeholder={guidance ? "e.g., 'Where is that button?' or 'I did it, next step'" : "e.g., 'How do I join this hackathon?'"}
+          buttonText={guidance ? "Send" : "Guide Me"}
         />
 
         {/* Response Display Section */}

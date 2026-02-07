@@ -2,27 +2,39 @@ import { Box, Button, IconButton, TextField, Typography, CircularProgress, Paper
 import { Mic, Send, Volume2 } from "lucide-react"
 
 interface GoalInputProps {
-    goal: string
-    onGoalChange: (goal: string) => void
-    onGuideMe: (isUpdate: boolean) => void
+    value: string
+    onChange: (value: string) => void
+    onSubmit: () => void
     isLoading: boolean
     isListening: boolean
     onToggleListening: () => void
-    hasGuidance: boolean
+    label: string
+    placeholder: string
+    buttonText?: string
 }
 
 export const GoalInput = ({
-    goal,
-    onGoalChange,
-    onGuideMe,
+    value,
+    onChange,
+    onSubmit,
     isLoading,
     isListening,
     onToggleListening,
-    hasGuidance
+    label,
+    placeholder,
+    buttonText = "Guide Me"
 }: GoalInputProps) => {
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' && e.shiftKey) {
+            e.preventDefault()
+            onSubmit()
+        }
+    }
+
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-            <Typography variant="subtitle2" fontWeight="600" color="text.primary">What is your goal?</Typography>
+            <Typography variant="subtitle2" fontWeight="600" color="text.primary">{label}</Typography>
             <Paper
                 elevation={0}
                 sx={{
@@ -36,9 +48,10 @@ export const GoalInput = ({
                     fullWidth
                     multiline
                     minRows={2}
-                    placeholder="e.g., 'How do I join this hackathon?'"
-                    value={goal}
-                    onChange={(e) => onGoalChange(e.target.value)}
+                    placeholder={placeholder}
+                    value={value}
+                    onChange={(e) => onChange(e.target.value)}
+                    onKeyDown={handleKeyDown}
                     variant="standard"
                     InputProps={{
                         disableUnderline: true,
@@ -60,24 +73,15 @@ export const GoalInput = ({
                 fullWidth
                 disableElevation
                 sx={{ borderRadius: 8, py: 1, mt: 0.5 }}
-                onClick={() => onGuideMe(false)}
+                onClick={onSubmit}
                 disabled={isLoading}
                 startIcon={isLoading ? <CircularProgress size={16} color="inherit" /> : <Send size={16} />}
             >
-                {isLoading ? "Analyzing..." : "Guide Me"}
+                {isLoading ? "Analyzing..." : buttonText}
             </Button>
-
-            {hasGuidance && (
-                <Button
-                    variant="text"
-                    fullWidth
-                    sx={{ borderRadius: 8, color: 'text.secondary' }}
-                    onClick={() => onGuideMe(true)}
-                    disabled={isLoading}
-                >
-                    {isLoading ? "Checking..." : "Check Progress"}
-                </Button>
-            )}
+            <Typography variant="caption" color="text.secondary" align="center" sx={{ display: 'block', mt: -0.5 }}>
+                Shift + Enter to send
+            </Typography>
         </Box>
     )
 }

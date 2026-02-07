@@ -35,14 +35,24 @@ export const useGuidance = ({ goal, onGuidanceUpdate, autoProgress }: UseGuidanc
     // Helper to speak text
     const speak = useCallback((text: string) => {
         if ('speechSynthesis' in window) {
+            // Cancel any current speech first
+            window.speechSynthesis.cancel()
             const utterance = new SpeechSynthesisUtterance(text)
             window.speechSynthesis.speak(utterance)
         }
     }, [])
 
-    const handleGuideMe = useCallback(async (currentGuidance: GuidanceResponse | null, isUpdate = false) => {
-        if (!goal.trim()) return
+    const stopSpeaking = useCallback(() => {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel()
+        }
+    }, [])
 
+    const handleGuideMe = useCallback(async (currentGuidance: GuidanceResponse | null, isUpdate = false, customPrompt?: string) => {
+        const promptToUse = customPrompt || goal
+        if (!promptToUse.trim()) return
+
+        stopSpeaking() // Stop previous audio immediately
         setIsLoading(true)
         setError(null)
 
@@ -55,8 +65,8 @@ export const useGuidance = ({ goal, onGuidanceUpdate, autoProgress }: UseGuidanc
         try {
             const response = await chrome.runtime.sendMessage({
                 action: "ANALYZE_PAGE",
-                userGoal: goal,
-                previousContext: isUpdate && currentGuidance ? currentGuidance.steps : null
+                userGoal: promptToUse,
+                previousContext: isUpdate && currentGuidance ? currentGuidance : null
             })
 
             if (response.error) {
@@ -79,7 +89,7 @@ export const useGuidance = ({ goal, onGuidanceUpdate, autoProgress }: UseGuidanc
         } finally {
             setIsLoading(false)
         }
-    }, [goal, onGuidanceUpdate, speak, sendOverlaysToContent])
+    }, [goal, onGuidanceUpdate, speak, stopSpeaking, sendOverlaysToContent])
 
     // --- Smart Auto-Progress Logic ---
 
@@ -132,6 +142,7 @@ export const useGuidance = ({ goal, onGuidanceUpdate, autoProgress }: UseGuidanc
         isLoading,
         error,
         handleGuideMe,
-        speak
+        speak,
+        stopSpeaking
     }
 }

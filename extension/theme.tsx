@@ -1,4 +1,4 @@
-import { createTheme, ThemeProvider, CssBaseline, type ThemeOptions } from "@mui/material"
+import { createTheme, ThemeProvider, CssBaseline, GlobalStyles, type ThemeOptions } from "@mui/material"
 import { useStorage } from "@plasmohq/storage/hook"
 import { useMemo, type ReactNode } from "react"
 
@@ -35,6 +35,11 @@ export const CustomThemeProvider = ({ children }: { children: ReactNode }) => {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
+            <GlobalStyles styles={{
+                html: { height: "100%", width: "100%", margin: 0, padding: 0 },
+                body: { height: "100%", width: "100%", margin: 0, padding: 0 },
+                "#__plasmo": { height: "100%", width: "100%" } // Plasmo default root
+            }} />
             {children}
         </ThemeProvider>
     )

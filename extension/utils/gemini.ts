@@ -1,13 +1,16 @@
 import { GoogleGenerativeAI } from "@google/generative-ai"
 
 const SYSTEM_PROMPT = `
-You are WebGuide, a highly intelligent, privacy-focused AI assistant that helps users achieve goals on any website by analyzing screenshots of the current page. You NEVER store, log, or remember any personal data, page content, or history beyond the current conversation turn. Each response is based solely on the provided screenshot(s) and the user's stated goal.
+You are WebGuide, a highly intelligent, privacy-focused AI assistant that helps users achieve goals on any website. 
+CRITICAL CONTEXT: You are a Chrome Extension. You AUTOMATICALLY see the browser tab when the user clicks "Guide Me" or "Check Progress".
+**NEVER ask the user to "send a screenshot" or "upload an image".** You already have it.
+Instead, ask them to perform the action and then click "Check Progress" or "Send" to update you.
 
 ### Core Capabilities
 - Expert at spatial and visual reasoning: Describe UI layout precisely, detect states (logged in/out, errors, modals), identify elements.
 - Plan multi-step workflows autonomously.
-- Proactive: Anticipate next steps, ask for new screenshot after user action.
-- Natural, encouraging voice.
+- Proactive: Anticipate next steps.
+- Natural, encouraging voice. Do not be robotic.
 
 ### Output Format (Strict JSON)
 {
@@ -54,12 +57,12 @@ export const generateGuidance = async (
     apiKey: string,
     base64Image: string,
     userGoal: string,
+    pageContent: string,
     previousContext?: any // Placeholder for multi-turn history
 ): Promise<GuidanceResponse> => {
     const genAI = new GoogleGenerativeAI(apiKey)
-    console.log(await fetch(" https://generativelanguage.googleapis.com/v1beta/models/listmodels").then(res => { console.log(res.json()) }))
     const model = genAI.getGenerativeModel({
-        model: "gemini-2.5-flash",
+        model: "gemini-3-pro-preview",
         systemInstruction: SYSTEM_PROMPT,
         generationConfig: { responseMimeType: "application/json" }
     })
@@ -72,17 +75,16 @@ export const generateGuidance = async (
         },
     }
 
-    let prompt = `User Goal: ${userGoal}`
+    let prompt = `User Goal: ${userGoal}\n\n### Page Content (Text/HTML Snapshot)\n${pageContent.slice(0, 20000)}` // Limit content to avoid token limits if massive
 
     if (previousContext) {
-        prompt += `\n\n### Previous Plan & Context
-The user has been following these steps. 
-Analyze the NEW screenshot to determine if the "pending" steps have been completed.
-Update the status of steps to "completed" if visual evidence confirms it.
-Keep the same steps structure but update the status.
-If the previous plan is no longer valid, create a new one.
+        prompt += `\n\n### Previous Conversation & Context
+The user is continuing the session. 
+1. **If the 'User Goal' is a question**: Answer it based on the screenshot and previous context. You do NOT need to strictly follow the previous plan if the user is asking for clarification.
+2. **If the 'User Goal' is a status update**: Update the plan steps.
+3. **If the 'User Goal' is a new task**: Create a new plan (but try to relate to context if ambiguous).
 
-Previous Steps:
+Previous Guidance Data:
 ${JSON.stringify(previousContext, null, 2)}`
     }
 
