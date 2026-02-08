@@ -1,5 +1,6 @@
 import { Box, IconButton, Tooltip, Typography } from "@mui/material"
 import { Moon, RotateCcw, Settings, Sun } from "lucide-react"
+import logo from "url:../assets/header-logo.png"
 
 interface SidePanelHeaderProps {
   mode: "light" | "dark"
@@ -26,9 +27,12 @@ export const SidePanelHeader = ({
         borderColor: "divider",
         bgcolor: "background.paper"
       }}>
-      <Typography variant="h6" color="text.primary" fontWeight="bold">
-        WebGuide
-      </Typography>
+      <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+        <img src={logo} alt="WebGuide" style={{ height: 28, width: "auto" }} />
+        <Typography variant="h6" color="text.primary" fontWeight="bold">
+          WebGuide
+        </Typography>
+      </Box>
       <Box sx={{ display: "flex", gap: 0.5 }}>
         <Tooltip
           title={
