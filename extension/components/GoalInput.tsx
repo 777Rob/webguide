@@ -5,9 +5,11 @@ import {
   IconButton,
   Paper,
   TextField,
+  Tooltip,
   Typography
 } from "@mui/material"
-import { Mic, Send, Volume2 } from "lucide-react"
+import { Mic, Send } from "lucide-react"
+import { useCallback } from "react"
 
 interface GoalInputProps {
   value: string
@@ -32,16 +34,31 @@ export const GoalInput = ({
   placeholder,
   buttonText = "Guide Me"
 }: GoalInputProps) => {
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && e.shiftKey) {
-      e.preventDefault()
-      onSubmit()
-    }
-  }
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault()
+        onSubmit()
+      }
+    },
+    [onSubmit]
+  )
+
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      onChange(e.target.value)
+    },
+    [onChange]
+  )
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
-      <Typography variant="subtitle2" fontWeight="600" color="text.primary">
+      <Typography
+        component="label"
+        htmlFor="goal-input"
+        variant="subtitle2"
+        fontWeight="600"
+        color="text.primary">
         {label}
       </Typography>
       <Paper
@@ -50,38 +67,57 @@ export const GoalInput = ({
           position: "relative",
           bgcolor: "action.hover",
           borderRadius: 3,
-          p: 0.5
+          p: 0.5,
+          border: "1px solid",
+          borderColor: "divider"
         }}>
         <TextField
+          id="goal-input"
           fullWidth
           multiline
           minRows={2}
+          maxRows={6}
           placeholder={placeholder}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={handleChange}
           onKeyDown={handleKeyDown}
           variant="standard"
           InputProps={{
             disableUnderline: true,
             sx: { px: 1.5, py: 1, fontSize: "0.95rem" }
           }}
+          aria-label={label}
         />
-        <IconButton
-          onClick={onToggleListening}
-          color={isListening ? "error" : "default"}
-          sx={{ position: "absolute", bottom: 4, right: 4 }}
-          size="small">
-          <Mic size={18} />
-        </IconButton>
+        <Tooltip title={isListening ? "Stop listening" : "Start voice input"}>
+          <IconButton
+            onClick={onToggleListening}
+            color={isListening ? "error" : "default"}
+            sx={{
+              position: "absolute",
+              bottom: 4,
+              right: 4,
+              transition: "all 0.2s"
+            }}
+            size="small"
+            aria-label={isListening ? "Stop listening" : "Start voice input"}>
+            <Mic size={18} />
+          </IconButton>
+        </Tooltip>
       </Paper>
 
       <Button
         variant="contained"
         fullWidth
         disableElevation
-        sx={{ borderRadius: 8, py: 1, mt: 0.5 }}
+        sx={{
+          borderRadius: 8,
+          py: 1,
+          mt: 0.5,
+          textTransform: "none",
+          fontWeight: 600
+        }}
         onClick={onSubmit}
-        disabled={isLoading}
+        disabled={isLoading || (!value.trim() && !isListening)}
         startIcon={
           isLoading ? (
             <CircularProgress size={16} color="inherit" />
@@ -96,7 +132,7 @@ export const GoalInput = ({
         color="text.secondary"
         align="center"
         sx={{ display: "block", mt: -0.5 }}>
-        Shift + Enter to send
+        Press Enter to send
       </Typography>
     </Box>
   )

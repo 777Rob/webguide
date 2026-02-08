@@ -64,10 +64,11 @@ export const generateGuidance = async (
 ): Promise<GuidanceResponse> => {
     const genAI = new GoogleGenerativeAI(apiKey)
     const model = genAI.getGenerativeModel({
-        model: "gemini-3-pro-preview",
+        model: process.env.PLASMO_PUBLIC_GEMINI_MODEL || "gemini-3-flash-preview",
         systemInstruction: SYSTEM_PROMPT,
         generationConfig: { responseMimeType: "application/json" }
     })
+    console.log("Using Gemini Model:", process.env.PLASMO_PUBLIC_GEMINI_MODEL || "gemini-3-flash-preview")
 
     // Remove header from base64 if present
     const imagePart = {

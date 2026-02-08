@@ -10,24 +10,34 @@ export const NextStepCard = ({ nextStep }: NextStepCardProps) => {
   return (
     <Paper
       elevation={0}
+      component="article"
+      aria-label="Next Step"
       sx={{
         p: 2.5,
         borderRadius: 4,
-        backgroundImage: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.05)} 0%, ${alpha(theme.palette.primary.main, 0.15)} 100%)`
+        position: "relative",
+        overflow: "hidden",
+        backgroundColor: alpha(theme.palette.primary.main, 0.08),
+        border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`
       }}>
       <Typography
         variant="caption"
         fontWeight="bold"
         color="primary"
-        sx={{ letterSpacing: 1, mb: 1, display: "block" }}>
+        sx={{
+          letterSpacing: 1,
+          mb: 1,
+          display: "block",
+          textTransform: "uppercase"
+        }}>
         NEXT STEP
       </Typography>
       <Typography
         variant="body1"
         fontWeight="500"
         sx={{
-          color:
-            theme.palette.mode === "dark" ? "primary.light" : "primary.dark"
+          color: theme.palette.text.primary,
+          lineHeight: 1.6
         }}>
         {nextStep}
       </Typography>

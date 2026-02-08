@@ -1,165 +1,96 @@
-import { useState, useEffect } from "react"
-import { Settings, Sun, Moon, RotateCcw, Pause, Play } from "lucide-react"
-import { Box, Button, IconButton, Paper, Typography } from "@mui/material"
-import { useStorage } from "@plasmohq/storage/hook"
+import { Box } from "@mui/material"
 
-import { getApiKey, getAutoProgress } from "./utils/storage"
-import type { GuidanceResponse } from "./utils/gemini"
-
-import { useSpeechRecognition } from "./hooks/useSpeechRecognition"
-import { useGuidance } from "./hooks/useGuidance"
-
-import { WelcomeView } from "./components/WelcomeView"
+import { ActiveGoalDisplay } from "./components/ActiveGoalDisplay"
 import { GoalInput } from "./components/GoalInput"
 import { ResponseDisplay } from "./components/ResponseDisplay"
+import { SidePanelHeader } from "./components/SidePanelHeader"
+import { WelcomeView } from "./components/WelcomeView"
+import { useAppFlow } from "./hooks/useAppFlow"
 import { CustomThemeProvider, useThemeMode } from "./theme"
 
-
 function SidePanelContent() {
-  const [goal, setGoal] = useStorage<string>("userGoal", "")
-  const [hasKey, setHasKey] = useState(false)
-  const [autoProgress, setAutoProgress] = useState(false)
-  const [chatInput, setChatInput] = useState("")
-
-  // Theme hook
   const { mode, toggleTheme } = useThemeMode()
 
-  // Storage hook for guidance persistence
-  const [guidance, setGuidance] = useStorage<GuidanceResponse | null>("currentGuidance", null)
-
-  // Verify API Key on mount
-  useEffect(() => {
-    const init = async () => {
-      const key = await getApiKey()
-      setHasKey(!!key)
-      const auto = await getAutoProgress()
-      setAutoProgress(auto)
-    }
-    init()
-  }, [])
   const {
-    isListening,
-    toggleListening
-  } = useSpeechRecognition({
-    onResult: (transcript) => {
-      if (guidance) {
-        setChatInput(transcript)
-      } else {
-        setGoal(transcript)
-      }
-    },
-    onError: (err) => console.error("Speech error", err)
-  })
-
-  // useGuidance handles the "smart" auto-progress internally now
-  const {
-    isLoading,
-    handleGuideMe,
-    speak,
-    isPaused,
-    togglePause
-  } = useGuidance({
     goal,
-    onGuidanceUpdate: (data) => setGuidance(data),
-    autoProgress
-  })
-
-  // Handlers
-  const handleStartGuidance = async (isUpdate: boolean, customPrompt?: string) => {
-    if (!isUpdate) {
-      setGuidance(null)
-      await handleGuideMe(null, false)
-    } else {
-      // If it's an update (follow-up), pass the custom prompt
-      await handleGuideMe(guidance, true, customPrompt)
-      setChatInput("") // Clear chat input after sending
-    }
-  }
-
-  const openOptions = () => {
-    chrome.runtime.openOptionsPage()
-  }
-
-  const handleReset = () => {
-    setGoal("")
-    setChatInput("")
-    setGuidance(null)
-  }
+    setGoal,
+    guidance,
+    chatInput,
+    setChatInput,
+    hasKey,
+    autoProgress,
+    isLoading,
+    isListening,
+    isPaused,
+    handleStartGuidance,
+    handleReset,
+    openOptions,
+    toggleListening,
+    togglePause,
+    speak
+  } = useAppFlow()
 
   if (!hasKey) {
     return <WelcomeView onOpenOptions={openOptions} />
   }
 
   return (
-    <Box sx={{ width: '100%', height: '100vh', display: 'flex', flexDirection: 'column', bgcolor: 'background.default', color: 'text.primary', overflow: 'hidden' }}>
+    <Box
+      sx={{
+        width: "100%",
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        bgcolor: "background.default",
+        color: "text.primary",
+        overflow: "hidden"
+      }}>
+      <SidePanelHeader
+        mode={mode}
+        toggleTheme={toggleTheme}
+        onReset={handleReset}
+        onOpenOptions={openOptions}
+      />
 
-      {/* Header */}
-      <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography variant="h6" color="text.primary" fontWeight="bold">WebGuide</Typography>
-        <Box sx={{ display: 'flex', gap: 0.5 }}>
-          <IconButton size="small" onClick={toggleTheme} sx={{ color: 'text.secondary' }}>
-            {mode === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-          </IconButton>
-          <IconButton size="small" onClick={handleReset} sx={{ color: 'text.secondary' }}>
-            <RotateCcw size={20} />
-          </IconButton>
-          <IconButton size="small" onClick={openOptions} sx={{ color: 'text.secondary' }}>
-            <Settings size={20} />
-          </IconButton>
-        </Box>
-      </Box>
+      <Box
+        component="main"
+        sx={{
+          p: 2,
+          overflowY: "auto",
+          flexGrow: 1,
+          display: "flex",
+          flexDirection: "column",
+          gap: 2
+        }}>
+        <ActiveGoalDisplay
+          guidance={guidance}
+          goal={goal}
+          autoProgress={autoProgress}
+          isPaused={isPaused}
+          onTogglePause={togglePause}
+        />
 
-      <Box sx={{ p: 2, overflowY: 'auto', flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
-
-        {/* Active Goal Display (Only when guidance exists) */}
-        {guidance && (
-          <Box sx={{ mb: 1 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
-              <Typography variant="caption" color="text.secondary" fontWeight="bold">ACTIVE GOAL</Typography>
-              {/* Pause/Resume Button */}
-              {autoProgress && (
-                <Button
-                  size="small"
-                  startIcon={isPaused ? <Play size={14} /> : <Pause size={14} />}
-                  onClick={togglePause}
-                  sx={{
-                    minWidth: 0,
-                    p: 0.5,
-                    fontSize: '0.75rem',
-                    color: isPaused ? 'warning.main' : 'text.secondary'
-                  }}
-                >
-                  {isPaused ? "Resume Agent" : "Pause Agent"}
-                </Button>
-              )}
-            </Box>
-            <Paper elevation={0} sx={{ p: 1.5, bgcolor: 'action.selected', borderRadius: 2 }}>
-              <Typography variant="body2" fontWeight="500">{guidance.title || goal}</Typography>
-            </Paper>
-          </Box>
-        )}
-
-        {/* Input Section - Changes based on state */}
         <GoalInput
           value={guidance ? chatInput : goal}
           onChange={guidance ? setChatInput : setGoal}
-          onSubmit={() => handleStartGuidance(!!guidance, guidance ? chatInput : undefined)}
+          onSubmit={() =>
+            handleStartGuidance(!!guidance, guidance ? chatInput : undefined)
+          }
           isLoading={isLoading}
           isListening={isListening}
           onToggleListening={toggleListening}
-          label={guidance ? "Ask a follow-up or update status" : "What is your goal?"}
-          placeholder={guidance ? "e.g., 'Where is that button?' or 'I did it, next step'" : "e.g., 'How do I join this hackathon?'"}
+          label={
+            guidance ? "Ask a follow-up or update status" : "What is your goal?"
+          }
+          placeholder={
+            guidance
+              ? "e.g., 'Where is that button?' or 'I did it, next step'"
+              : "e.g., 'How do I join this hackathon?'"
+          }
           buttonText={guidance ? "Send" : "Guide Me"}
         />
 
-        {/* Response Display Section */}
-        {guidance && (
-          <ResponseDisplay
-            guidance={guidance}
-            onSpeak={speak}
-          />
-        )}
-
+        {guidance && <ResponseDisplay guidance={guidance} onSpeak={speak} />}
       </Box>
     </Box>
   )
