@@ -108,7 +108,15 @@ const HighlightBox = ({ item }: { item: OverlayItem }) => {
 
   if (!Array.isArray(coords) || coords.length !== 4) return null
 
-  const [ymin, xmin, ymax, xmax] = coords as number[]
+  let [ymin, xmin, ymax, xmax] = coords as number[]
+
+  // Handle Gemini's 0-1000 scaling
+  if (ymin > 1 || xmin > 1 || ymax > 1 || xmax > 1) {
+    ymin /= 1000
+    xmin /= 1000
+    ymax /= 1000
+    xmax /= 1000
+  }
 
   if (
     typeof ymin !== "number" ||
