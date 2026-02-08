@@ -35,7 +35,7 @@ export const useGuidance = ({ goal, onGuidanceUpdate, autoProgress }: UseGuidanc
                         suggestions
                     })
                     console.log("WebGuide: Overlays sent successfully")
-                    return // Success
+                    return 
                 }
         } catch (e: any) {
                 const isLastAttempt = i === MAX_RETRIES - 1
@@ -51,11 +51,9 @@ export const useGuidance = ({ goal, onGuidanceUpdate, autoProgress }: UseGuidanc
         }
     }, [])
 
-    // Helper to speak text
     const speak = useCallback((text: string) => {
         if (!('speechSynthesis' in window)) return
 
-        // Cancel any current speech first
         window.speechSynthesis.cancel()
 
         const speakWithVoice = (voices: SpeechSynthesisVoice[]) => {
@@ -73,7 +71,6 @@ export const useGuidance = ({ goal, onGuidanceUpdate, autoProgress }: UseGuidanc
                 utterance.voice = preferredVoice
                 console.log("WebGuide: Speaking with voice:", preferredVoice.name)
                 
-                // Slight tweaks for specific Google voice
                 if (preferredVoice.name === "Google US English") {
                    utterance.rate = 1.0 // Normal speed
                    utterance.pitch = 1.0
@@ -111,11 +108,10 @@ export const useGuidance = ({ goal, onGuidanceUpdate, autoProgress }: UseGuidanc
         const promptToUse = customPrompt || goal
         if (!promptToUse.trim()) return
 
-        stopSpeaking() // Stop previous audio immediately
+        stopSpeaking()
         setIsLoading(true)
         setError(null)
 
-        // Clear any pending scheduled updates since we are starting one now
         if (scheduledUpdateRef.current) {
             clearTimeout(scheduledUpdateRef.current)
             scheduledUpdateRef.current = null

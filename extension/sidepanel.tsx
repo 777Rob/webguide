@@ -103,6 +103,9 @@ function SidePanelContent() {
               : "e.g., 'How do I join this hackathon?'"
           }
           buttonText={guidance ? "Send" : "Guide Me"}
+          onNext={
+            guidance ? () => handleStartGuidance(true, "Next step") : undefined
+          }
         />
 
         {guidance && <ResponseDisplay guidance={guidance} onSpeak={speak} />}

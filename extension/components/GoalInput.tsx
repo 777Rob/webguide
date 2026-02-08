@@ -22,6 +22,7 @@ interface GoalInputProps {
   label: string
   placeholder: string
   buttonText?: string
+  onNext?: () => void
 }
 
 export const GoalInput = ({
@@ -34,7 +35,8 @@ export const GoalInput = ({
   onToggleListening,
   label,
   placeholder,
-  buttonText = "Guide Me"
+  buttonText = "Guide Me",
+  onNext
 }: GoalInputProps) => {
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -54,31 +56,24 @@ export const GoalInput = ({
   )
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
-      <Typography
-        component="label"
-        htmlFor="goal-input"
-        variant="subtitle2"
-        fontWeight="600"
-        color="text.primary">
-        {label}
-      </Typography>
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
       <Paper
         elevation={0}
         sx={{
-          position: "relative",
           bgcolor: "action.hover",
           borderRadius: 3,
-          p: 0.5,
           border: "1px solid",
-          borderColor: "divider"
+          borderColor: "divider",
+          display: "flex",
+          alignItems: "center",
+          pr: 1
         }}>
         <TextField
           id="goal-input"
           fullWidth
           multiline
-          minRows={2}
-          maxRows={6}
+          minRows={1}
+          maxRows={4}
           placeholder={placeholder}
           value={value}
           onChange={handleChange}
@@ -86,27 +81,44 @@ export const GoalInput = ({
           variant="standard"
           InputProps={{
             disableUnderline: true,
-            sx: { px: 1.5, py: 1, fontSize: "0.95rem" }
+            sx: { px: 2, py: 1.5, fontSize: "0.95rem" }
           }}
           aria-label={label}
         />
-        <Tooltip title={isListening ? "Stop listening" : "Start voice input"}>
-          <IconButton
-            onClick={onToggleListening}
-            color={
-              isPermissionDenied ? "warning" : isListening ? "error" : "default"
-            }
-            sx={{
-              position: "absolute",
-              bottom: 4,
-              right: 4,
-              transition: "all 0.2s"
-            }}
-            size="small"
-            aria-label={isListening ? "Stop listening" : "Start voice input"}>
-            <Mic size={18} />
-          </IconButton>
-        </Tooltip>
+
+        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+          <Tooltip title={isListening ? "Stop listening" : "Start voice input"}>
+            <IconButton
+              onClick={onToggleListening}
+              color={
+                isPermissionDenied
+                  ? "warning"
+                  : isListening
+                    ? "error"
+                    : "default"
+              }
+              size="small"
+              aria-label={isListening ? "Stop listening" : "Start voice input"}>
+              <Mic size={20} />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title={buttonText}>
+            <span>
+              <IconButton
+                onClick={onSubmit}
+                color="primary"
+                disabled={isLoading || (!value.trim() && !isListening)}
+                size="small">
+                {isLoading ? (
+                  <CircularProgress size={20} color="inherit" />
+                ) : (
+                  <Send size={20} />
+                )}
+              </IconButton>
+            </span>
+          </Tooltip>
+        </Box>
       </Paper>
 
       {isPermissionDenied && (
@@ -129,35 +141,23 @@ export const GoalInput = ({
         </Button>
       )}
 
-      <Button
-        variant="contained"
-        fullWidth
-        disableElevation
-        sx={{
-          borderRadius: 8,
-          py: 1,
-          mt: 0.5,
-          textTransform: "none",
-          fontWeight: 600
-        }}
-        onClick={onSubmit}
-        disabled={isLoading || (!value.trim() && !isListening)}
-        startIcon={
-          isLoading ? (
-            <CircularProgress size={16} color="inherit" />
-          ) : (
-            <Send size={16} />
-          )
-        }>
-        {isLoading ? "Analyzing..." : buttonText}
-      </Button>
-      <Typography
-        variant="caption"
-        color="text.secondary"
-        align="center"
-        sx={{ display: "block", mt: -0.5 }}>
-        Press Enter to send
-      </Typography>
+      {onNext && (
+        <Button
+          variant="contained"
+          fullWidth
+          disableElevation
+          sx={{
+            borderRadius: 8,
+            py: 0.75,
+            textTransform: "none",
+            fontWeight: 600,
+            mt: 0.5
+          }}
+          onClick={onNext}
+          disabled={isLoading}>
+          Next Step
+        </Button>
+      )}
     </Box>
   )
 }

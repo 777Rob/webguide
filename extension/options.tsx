@@ -92,7 +92,7 @@ function OptionsContent() {
               color="primary"
             />
           }
-          label="Auto-detect Progress (Poll every 10s)"
+          label="Auto-detect Progress"
         />
 
         <Button

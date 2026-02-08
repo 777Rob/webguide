@@ -3,33 +3,30 @@ import { useCallback, useEffect, useState } from "react"
 import { useStorage } from "@plasmohq/storage/hook"
 
 import type { GuidanceResponse } from "../utils/gemini"
-import { getApiKey, getAutoProgress } from "../utils/storage"
+import { API_KEY_STORAGE_KEY, getApiKey, getAutoProgress } from "../utils/storage"
 import { useGuidance } from "./useGuidance"
 import { useSpeechRecognition } from "./useSpeechRecognition"
 
 export const useAppFlow = () => {
-  // --- State ---
   const [goal, setGoal] = useStorage<string>("userGoal", "")
   const [guidance, setGuidance] = useStorage<GuidanceResponse | null>(
     "currentGuidance",
     null
   )
-  const [hasKey, setHasKey] = useState(false)
+  const [apiKey] = useStorage<string>(API_KEY_STORAGE_KEY)
   const [autoProgress, setAutoProgress] = useState(false)
   const [chatInput, setChatInput] = useState("")
 
-  // --- Initialization ---
+  const hasKey = !!apiKey
+
   useEffect(() => {
     const init = async () => {
-      const key = await getApiKey()
-      setHasKey(!!key)
       const auto = await getAutoProgress()
       setAutoProgress(auto)
     }
     init()
   }, [])
 
-  // --- Sub-hooks ---
   const {
     isLoading,
     handleGuideMe,
@@ -55,7 +52,6 @@ export const useAppFlow = () => {
         onError: (err) => console.error("Speech error", err)
       })
     
-      // --- Handlers ---
       const handleStartGuidance = useCallback(
         async (isUpdate: boolean, customPrompt?: string) => {
           if (!isUpdate) {
@@ -81,7 +77,6 @@ export const useAppFlow = () => {
       }, [])
     
       return {
-        // State
         goal,
         setGoal,
         guidance,
@@ -91,13 +86,11 @@ export const useAppFlow = () => {
         hasKey,
         autoProgress,
         
-        // Status
         isLoading,
         isListening,
         isPermissionDenied, // Expose
         isPaused,
     
-        // Actions
         handleStartGuidance,
         handleReset,
         openOptions,
