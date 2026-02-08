@@ -21,10 +21,12 @@ export const ResponseDisplay = ({
       <ProgressSteps steps={guidance.steps} />
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
         <NextStepCard nextStep={guidance.next_steps} />
-        <GuidanceDetails
-          textGuidance={guidance.text_guidance}
-          reasoning={guidance.reasoning}
-        />
+        {process.env.PLASMO_PUBLIC_DEV_MODE === "true" && (
+          <GuidanceDetails
+            textGuidance={guidance.text_guidance}
+            reasoning={guidance.reasoning}
+          />
+        )}
       </Box>
     </Box>
   )
