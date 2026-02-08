@@ -119,16 +119,25 @@ const HighlightBox = ({ item }: { item: OverlayItem }) => {
     return null
   }
 
+  // --- Add Padding ---
+  // Expand the box by ~1% (0.01) on each side for breathing room
+  // Clamp values to stay within 0-1 range
+  const PADDING = 0.008
+  const pYmin = Math.max(0, ymin - PADDING)
+  const pXmin = Math.max(0, xmin - PADDING)
+  const pYmax = Math.min(1, ymax + PADDING)
+  const pXmax = Math.min(1, xmax + PADDING)
+
   return (
     <div
       style={{
         position: "absolute",
-        top: `${ymin * 100}%`,
-        left: `${xmin * 100}%`,
-        width: `${(xmax - xmin) * 100}%`,
-        height: `${(ymax - ymin) * 100}%`,
+        top: `${pYmin * 100}%`,
+        left: `${pXmin * 100}%`,
+        width: `${(pXmax - pXmin) * 100}%`,
+        height: `${(pYmax - pYmin) * 100}%`,
         border: "3px solid #f44336",
-        borderRadius: "6px",
+        borderRadius: "8px", // More rounded for nicer look
         boxShadow:
           "0 0 0 9999px rgba(0, 0, 0, 0.3), 0 0 15px rgba(244, 67, 54, 0.8)", // Dim background effect + glow
         backgroundColor: "rgba(255, 255, 255, 0.05)", // Slight highlight
