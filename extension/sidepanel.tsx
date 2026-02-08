@@ -1,4 +1,4 @@
-import { Box } from "@mui/material"
+import { Box, Button, Typography } from "@mui/material"
 
 import { ActiveGoalDisplay } from "./components/ActiveGoalDisplay"
 import { GoalInput } from "./components/GoalInput"
@@ -81,7 +81,6 @@ function SidePanelContent() {
           autoProgress={autoProgress}
           isPaused={isPaused}
           onTogglePause={togglePause}
-          onTestOverlay={handleTestOverlay}
         />
 
         <GoalInput
@@ -105,6 +104,31 @@ function SidePanelContent() {
         />
 
         {guidance && <ResponseDisplay guidance={guidance} onSpeak={speak} />}
+
+        {/* Persistent Debug Actions */}
+        <Box
+          sx={{
+            mt: "auto",
+            pt: 2,
+            borderTop: "1px solid",
+            borderColor: "divider"
+          }}>
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            display="block"
+            mb={1}>
+            DEBUG UTILS
+          </Typography>
+          <Button
+            variant="outlined"
+            color="warning"
+            size="small"
+            fullWidth
+            onClick={handleTestOverlay}>
+            Test Visual Arrow
+          </Button>
+        </Box>
       </Box>
     </Box>
   )

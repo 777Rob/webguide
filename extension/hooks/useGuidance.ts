@@ -37,10 +37,12 @@ export const useGuidance = ({ goal, onGuidanceUpdate, autoProgress }: UseGuidanc
                     console.log("WebGuide: Overlays sent successfully")
                     return // Success
                 }
-            } catch (e: any) {
+        } catch (e: any) {
                 const isLastAttempt = i === MAX_RETRIES - 1
                 if (isLastAttempt) {
                     console.error("WebGuide: Failed to send overlays after retries", e)
+                    // Feedback for debugging:
+                    alert("WebGuide: Failed to send overlay. Make sure you are on a valid webpage, not a chrome:// page.")
                 } else {
                     console.log(`WebGuide: Retrying overlay send (${i + 1}/${MAX_RETRIES})...`)
                     await new Promise(resolve => setTimeout(resolve, RETRY_DELAY))

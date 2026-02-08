@@ -177,7 +177,7 @@ const Overlay = () => {
         width: "100%",
         height: "100%",
         pointerEvents: "none",
-        zIndex: 999999,
+        zIndex: 2147483647, // Max Z-Index
         overflow: "hidden"
       }}>
       {overlays.map((item, index) => (

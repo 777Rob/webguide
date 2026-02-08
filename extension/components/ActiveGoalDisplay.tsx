@@ -9,7 +9,7 @@ interface ActiveGoalDisplayProps {
   autoProgress: boolean
   isPaused: boolean
   onTogglePause: () => void
-  onTestOverlay?: () => void
+  onTogglePause: () => void
 }
 
 export const ActiveGoalDisplay = ({
@@ -17,8 +17,7 @@ export const ActiveGoalDisplay = ({
   goal,
   autoProgress,
   isPaused,
-  onTogglePause,
-  onTestOverlay
+  onTogglePause
 }: ActiveGoalDisplayProps) => {
   if (!guidance) return null
 
@@ -35,21 +34,6 @@ export const ActiveGoalDisplay = ({
           ACTIVE GOAL
         </Typography>
         <Box display="flex" gap={1}>
-          {/* DEBUG BUTTON */}
-          {onTestOverlay && (
-            <Button
-              size="small"
-              onClick={onTestOverlay}
-              sx={{
-                minWidth: 0,
-                p: 0.5,
-                fontSize: "0.75rem",
-                color: "error.main" // Red to stand out
-              }}>
-              Test Overlay
-            </Button>
-          )}
-
           {/* Pause/Resume Button */}
           {autoProgress && (
             <Button
