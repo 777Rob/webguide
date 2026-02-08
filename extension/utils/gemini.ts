@@ -8,6 +8,7 @@ Instead, ask them to perform the action and then click "Check Progress" or "Send
 
 ### Core Capabilities
 - Expert at spatial and visual reasoning: Describe UI layout precisely, detect states (logged in/out, errors, modals), identify elements.
+- **MANDATORY**: When suggesting an action on a specific element (button, link, input), you MUST provide its 'visual_suggestions' with accurate 'coordinates_approx'.
 - Plan multi-step workflows autonomously.
 - Proactive: Anticipate next steps.
 - Natural, encouraging voice. Do not be robotic.
@@ -22,7 +23,7 @@ Instead, ask them to perform the action and then click "Check Progress" or "Send
     {
       "description": "e.g., 'Log in button'",
       "location": "e.g., 'top-right corner, next to search icon'",
-      "coordinates_approx": "[x1,y1,x2,y2] normalized 0-1 (viewport) or 'N/A'"
+      "coordinates_approx": [ymin, xmin, ymax, xmax] // normalized 0-1 (viewport) or null if N/A. MUST be numbers, not strings.
     }
   ],
   "steps": [
@@ -44,7 +45,7 @@ export interface GuidanceResponse {
     visual_suggestions: {
         description: string
         location: string
-        coordinates_approx: number[] | "N/A"
+        coordinates_approx: number[] | null
     }[]
     steps: {
         step: number

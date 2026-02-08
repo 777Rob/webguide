@@ -30,12 +30,19 @@ export const useAppFlow = () => {
   }, [])
 
   // --- Sub-hooks ---
-  const { isLoading, handleGuideMe, speak, isPaused, togglePause } =
-    useGuidance({
-      goal,
-      onGuidanceUpdate: (data) => setGuidance(data),
-      autoProgress
-    })
+  const {
+    isLoading,
+    handleGuideMe,
+    speak,
+    stopSpeaking,
+    isPaused,
+    togglePause,
+    sendOverlaysToContent
+  } = useGuidance({
+    goal,
+    onGuidanceUpdate: (data) => setGuidance(data),
+    autoProgress
+  })
 
   const { isListening, toggleListening } = useSpeechRecognition({
     onResult: (transcript) => {
@@ -63,10 +70,11 @@ export const useAppFlow = () => {
   )
 
   const handleReset = useCallback(() => {
+    stopSpeaking()
     setGoal("")
     setChatInput("")
     setGuidance(null)
-  }, [setGoal, setGuidance])
+  }, [setGoal, setGuidance, stopSpeaking])
 
   const openOptions = useCallback(() => {
     chrome.runtime.openOptionsPage()
@@ -94,6 +102,7 @@ export const useAppFlow = () => {
     openOptions,
     toggleListening,
     togglePause,
-    speak
+    speak,
+    sendOverlaysToContent
   }
 }

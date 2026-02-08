@@ -9,6 +9,7 @@ interface ActiveGoalDisplayProps {
   autoProgress: boolean
   isPaused: boolean
   onTogglePause: () => void
+  onTestOverlay?: () => void
 }
 
 export const ActiveGoalDisplay = ({
@@ -16,7 +17,8 @@ export const ActiveGoalDisplay = ({
   goal,
   autoProgress,
   isPaused,
-  onTogglePause
+  onTogglePause,
+  onTestOverlay
 }: ActiveGoalDisplayProps) => {
   if (!guidance) return null
 
@@ -32,21 +34,38 @@ export const ActiveGoalDisplay = ({
         <Typography variant="caption" color="text.secondary" fontWeight="bold">
           ACTIVE GOAL
         </Typography>
-        {/* Pause/Resume Button */}
-        {autoProgress && (
-          <Button
-            size="small"
-            startIcon={isPaused ? <Play size={14} /> : <Pause size={14} />}
-            onClick={onTogglePause}
-            sx={{
-              minWidth: 0,
-              p: 0.5,
-              fontSize: "0.75rem",
-              color: isPaused ? "warning.main" : "text.secondary"
-            }}>
-            {isPaused ? "Resume Agent" : "Pause Agent"}
-          </Button>
-        )}
+        <Box display="flex" gap={1}>
+          {/* DEBUG BUTTON */}
+          {onTestOverlay && (
+            <Button
+              size="small"
+              onClick={onTestOverlay}
+              sx={{
+                minWidth: 0,
+                p: 0.5,
+                fontSize: "0.75rem",
+                color: "error.main" // Red to stand out
+              }}>
+              Test Overlay
+            </Button>
+          )}
+
+          {/* Pause/Resume Button */}
+          {autoProgress && (
+            <Button
+              size="small"
+              startIcon={isPaused ? <Play size={14} /> : <Pause size={14} />}
+              onClick={onTogglePause}
+              sx={{
+                minWidth: 0,
+                p: 0.5,
+                fontSize: "0.75rem",
+                color: isPaused ? "warning.main" : "text.secondary"
+              }}>
+              {isPaused ? "Resume" : "Pause"}
+            </Button>
+          )}
+        </Box>
       </Box>
       <Paper
         elevation={0}

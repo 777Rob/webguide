@@ -27,11 +27,24 @@ function SidePanelContent() {
     openOptions,
     toggleListening,
     togglePause,
-    speak
+    speak,
+    sendOverlaysToContent // Expose for debugging
   } = useAppFlow()
 
   if (!hasKey) {
     return <WelcomeView onOpenOptions={openOptions} />
+  }
+
+  // Debug handler
+  const handleTestOverlay = () => {
+    if (sendOverlaysToContent) {
+      sendOverlaysToContent([
+        {
+          description: "Test Overlay (Center)",
+          coordinates_approx: [0.4, 0.4, 0.6, 0.6] // Center box
+        }
+      ])
+    }
   }
 
   return (
@@ -68,6 +81,7 @@ function SidePanelContent() {
           autoProgress={autoProgress}
           isPaused={isPaused}
           onTogglePause={togglePause}
+          onTestOverlay={handleTestOverlay}
         />
 
         <GoalInput

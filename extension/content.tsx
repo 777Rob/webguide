@@ -17,18 +17,27 @@ const useOverlays = () => {
   const [overlays, setOverlays] = useState<OverlayItem[]>([])
 
   useEffect(() => {
+    // Debug log to confirm injection
+    console.log("WebGuide: Content Script Mounted & Listening")
+
     const handleMessage = (
       request: any,
       _sender: chrome.runtime.MessageSender,
-      _sendResponse: (response?: any) => void
+      sendResponse: (response?: any) => void
     ) => {
+      // Ping pong for health check
+      if (request.action === "PING") {
+        sendResponse({ status: "alive" })
+        return
+      }
+
       if (request.action === "SHOW_OVERLAYS") {
         console.log("WebGuide: Showing overlays", request.suggestions)
         setOverlays(request.suggestions || [])
 
         // Auto-clear after timeout to not annoy user
         const timer = setTimeout(() => setOverlays([]), OVERLAY_TIMEOUT_MS)
-        return () => clearTimeout(timer) // clear timeout if effect re-runs or component unmounts (though unlikely here)
+        return () => clearTimeout(timer)
       }
     }
 
@@ -41,12 +50,65 @@ const useOverlays = () => {
 
 // --- Components ---
 
-const HighlightBox = ({ item }: { item: OverlayItem }) => {
-  if (!item.coordinates_approx || !Array.isArray(item.coordinates_approx))
-    return null
+const ArrowPointer = () => (
+  <div
+    style={{
+      position: "absolute",
+      top: "-42px",
+      left: "50%",
+      transform: "translateX(-50%)",
+      filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.5))",
+      animation: "wg-bounce 1s infinite",
+      pointerEvents: "none",
+      zIndex: 2147483647
+    }}>
+    <style>
+      {`
+        @keyframes wg-bounce {
+          0%, 100% { transform: translateX(-50%) translateY(0); }
+          50% { transform: translateX(-50%) translateY(-10px); }
+        }
+      `}
+    </style>
+    <svg
+      width="32"
+      height="32"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M12 21L12 3M12 21L5 14M12 21L19 14"
+        stroke="white"
+        strokeWidth="4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M12 21L12 3M12 21L5 14M12 21L19 14"
+        stroke="#f44336"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx="12" cy="21" r="3" fill="#f44336" />
+    </svg>
+  </div>
+)
 
-  // Gemini returns [ymin, xmin, ymax, xmax] usually
-  const [ymin, xmin, ymax, xmax] = item.coordinates_approx
+const HighlightBox = ({ item }: { item: OverlayItem }) => {
+  let coords = item.coordinates_approx
+
+  if (typeof coords === "string") {
+    try {
+      coords = JSON.parse(coords)
+    } catch (e) {
+      return null
+    }
+  }
+
+  if (!Array.isArray(coords) || coords.length !== 4) return null
+
+  const [ymin, xmin, ymax, xmax] = coords as number[]
 
   if (
     typeof ymin !== "number" ||
@@ -66,26 +128,37 @@ const HighlightBox = ({ item }: { item: OverlayItem }) => {
         width: `${(xmax - xmin) * 100}%`,
         height: `${(ymax - ymin) * 100}%`,
         border: "3px solid #f44336",
-        borderRadius: "4px",
-        boxShadow: "0 0 10px rgba(244, 67, 54, 0.5)",
-        backgroundColor: "rgba(244, 67, 54, 0.1)",
-        display: "flex", // For the label positioning
-        alignItems: "flex-start",
-        pointerEvents: "auto" // Allow clicking through? No, wait. The container has pointerEvents: none. This box might need it if we want interaction later.
+        borderRadius: "6px",
+        boxShadow:
+          "0 0 0 9999px rgba(0, 0, 0, 0.3), 0 0 15px rgba(244, 67, 54, 0.8)", // Dim background effect + glow
+        backgroundColor: "rgba(255, 255, 255, 0.05)", // Slight highlight
+        zIndex: 2147483646,
+        pointerEvents: "none",
+        clipPath: `inset(0 0 0 0)` // Helps with the big shadow
       }}>
-      <span
+      {/* Arrow Indicator */}
+      <ArrowPointer />
+
+      {/* Label */}
+      <div
         style={{
-          backgroundColor: "#f44336",
+          position: "absolute",
+          top: "-64px", // Above arrow
+          left: "50%",
+          transform: "translateX(-50%)",
+          backgroundColor: "#1a1a1a",
           color: "white",
-          padding: "2px 6px",
-          fontSize: "12px",
-          fontWeight: "bold",
-          borderRadius: "0 0 4px 0",
-          marginTop: "-1px", // Adjust for border
-          marginLeft: "-1px"
+          padding: "6px 12px",
+          fontSize: "14px",
+          fontWeight: "600",
+          borderRadius: "8px",
+          whiteSpace: "nowrap",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+          border: "1px solid #333",
+          zIndex: 2147483647
         }}>
         {item.description}
-      </span>
+      </div>
     </div>
   )
 }
@@ -103,7 +176,7 @@ const Overlay = () => {
         left: 0,
         width: "100%",
         height: "100%",
-        pointerEvents: "none", // Let clicks pass through to the page
+        pointerEvents: "none",
         zIndex: 999999,
         overflow: "hidden"
       }}>

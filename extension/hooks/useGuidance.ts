@@ -19,16 +19,33 @@ export const useGuidance = ({ goal, onGuidanceUpdate, autoProgress }: UseGuidanc
 
     // Helper to send overlays to content script
     const sendOverlaysToContent = useCallback(async (suggestions: any[]) => {
-        try {
-            const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
-            if (tab?.id) {
-                chrome.tabs.sendMessage(tab.id, {
-                    action: "SHOW_OVERLAYS",
-                    suggestions
-                })
+        const MAX_RETRIES = 5
+        const RETRY_DELAY = 1000
+
+        for (let i = 0; i < MAX_RETRIES; i++) {
+            try {
+                // Use lastFocusedWindow to target the actual browser window, not the side panel's context
+                const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true })
+                
+                if (tab?.id) {
+                    console.log(`WebGuide: Sending overlays to tab ${tab.id} (${tab.url})`)
+                    // Check if we can message the tab
+                    await chrome.tabs.sendMessage(tab.id, {
+                        action: "SHOW_OVERLAYS",
+                        suggestions
+                    })
+                    console.log("WebGuide: Overlays sent successfully")
+                    return // Success
+                }
+            } catch (e: any) {
+                const isLastAttempt = i === MAX_RETRIES - 1
+                if (isLastAttempt) {
+                    console.error("WebGuide: Failed to send overlays after retries", e)
+                } else {
+                    console.log(`WebGuide: Retrying overlay send (${i + 1}/${MAX_RETRIES})...`)
+                    await new Promise(resolve => setTimeout(resolve, RETRY_DELAY))
+                }
             }
-        } catch (e) {
-            console.error("Failed to send overlays", e)
         }
     }, [])
 
@@ -161,6 +178,7 @@ export const useGuidance = ({ goal, onGuidanceUpdate, autoProgress }: UseGuidanc
         speak,
         stopSpeaking,
         isPaused,
-        togglePause
+        togglePause,
+        sendOverlaysToContent
     }
 }
