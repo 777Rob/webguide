@@ -3,7 +3,7 @@ import { getApiKey, setApiKey as setStorageApiKey, getAutoProgress, setAutoProgr
 
 export const useOptions = () => {
     const [apiKey, setApiKeyValue] = useState("")
-    const [autoProgress, setAutoProgressValue] = useState(false)
+
     const [snackbarOpen, setSnackbarOpen] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
 
@@ -12,9 +12,6 @@ export const useOptions = () => {
             try {
                 const key = await getApiKey()
                 if (key) setApiKeyValue(key)
-
-                const auto = await getAutoProgress()
-                setAutoProgressValue(auto)
             } catch (error) {
                 console.error("Failed to load settings", error)
             } finally {
@@ -29,13 +26,12 @@ export const useOptions = () => {
 
         try {
             await setStorageApiKey(apiKey)
-            await setStorageAutoProgress(autoProgress)
             setSnackbarOpen(true)
         } catch (error) {
             console.error("Failed to save settings", error)
             alert("Failed to save settings")
         }
-    }, [apiKey, autoProgress])
+    }, [apiKey])
 
     const closeSnackbar = useCallback(() => {
         setSnackbarOpen(false)
@@ -44,8 +40,6 @@ export const useOptions = () => {
     return {
         apiKey,
         setApiKey: setApiKeyValue,
-        autoProgress,
-        setAutoProgress: setAutoProgressValue,
         snackbarOpen,
         closeSnackbar,
         saveSettings,

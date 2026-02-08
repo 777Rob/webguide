@@ -183,31 +183,7 @@ export const useGuidance = ({ goal, onGuidanceUpdate, autoProgress }: UseGuidanc
         return () => chrome.runtime.onMessage.removeListener(handlePageChange)
     }, [autoProgress, isLoading, handleGuideMe, isPaused])
 
-    useEffect(() => {
-        // 2. 30-Second Timeout after completion
-        if (autoProgress && !isLoading && !isPaused && latestGuidanceRef.current && !latestGuidanceRef.current.completed) {
-            if (!scheduledUpdateRef.current) {
-                console.log("WebGuide: Scheduling check in 30s")
-                scheduledUpdateRef.current = setTimeout(() => {
-                    console.log("WebGuide: 30s timeout reached, checking progress...")
-                    handleGuideMe(latestGuidanceRef.current, true)
-                    scheduledUpdateRef.current = null
-                }, 30000)
-            }
-        } else {
-            if (scheduledUpdateRef.current) {
-                clearTimeout(scheduledUpdateRef.current)
-                scheduledUpdateRef.current = null
-            }
-        }
 
-        return () => {
-            if (scheduledUpdateRef.current) {
-                clearTimeout(scheduledUpdateRef.current)
-                scheduledUpdateRef.current = null
-            }
-        }
-    }, [autoProgress, isLoading, handleGuideMe, isPaused])
 
     return {
         isLoading,

@@ -4,10 +4,8 @@ import {
   Button,
   CircularProgress,
   Container,
-  FormControlLabel,
   Paper,
   Snackbar,
-  Switch,
   TextField,
   Typography
 } from "@mui/material"
@@ -19,8 +17,7 @@ function OptionsContent() {
   const {
     apiKey,
     setApiKey,
-    autoProgress,
-    setAutoProgress,
+
     snackbarOpen,
     closeSnackbar,
     saveSettings,
@@ -82,17 +79,6 @@ function OptionsContent() {
           value={apiKey}
           onChange={(e) => setApiKey(e.target.value)}
           placeholder="Enter your API Key"
-        />
-
-        <FormControlLabel
-          control={
-            <Switch
-              checked={autoProgress}
-              onChange={(e) => setAutoProgress(e.target.checked)}
-              color="primary"
-            />
-          }
-          label="Auto-detect Progress"
         />
 
         <Button

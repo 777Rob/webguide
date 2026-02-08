@@ -14,18 +14,11 @@ export const useAppFlow = () => {
     null
   )
   const [apiKey] = useStorage<string>(API_KEY_STORAGE_KEY)
-  const [autoProgress, setAutoProgress] = useState(false)
+
+  const autoProgress = true // Always enabled (smart polling)
   const [chatInput, setChatInput] = useState("")
 
   const hasKey = !!apiKey
-
-  useEffect(() => {
-    const init = async () => {
-      const auto = await getAutoProgress()
-      setAutoProgress(auto)
-    }
-    init()
-  }, [])
 
   const {
     isLoading,

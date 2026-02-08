@@ -121,6 +121,13 @@ export const GoalInput = ({
         </Box>
       </Paper>
 
+      <Typography
+        variant="caption"
+        color="text.secondary"
+        sx={{ ml: 1, mt: 0.5, fontSize: "0.7rem" }}>
+        Press Enter to send
+      </Typography>
+
       {isPermissionDenied && (
         <Button
           variant="text"
@@ -135,27 +142,10 @@ export const GoalInput = ({
             fontSize: "0.75rem",
             textTransform: "none",
             justifyContent: "flex-start",
-            px: 1
+            px: 1,
+            mt: 0.5
           }}>
           ⚠️ Microphone blocked. Click to enable.
-        </Button>
-      )}
-
-      {onNext && (
-        <Button
-          variant="contained"
-          fullWidth
-          disableElevation
-          sx={{
-            borderRadius: 8,
-            py: 0.75,
-            textTransform: "none",
-            fontWeight: 600,
-            mt: 0.5
-          }}
-          onClick={onNext}
-          disabled={isLoading}>
-          Next Step
         </Button>
       )}
     </Box>

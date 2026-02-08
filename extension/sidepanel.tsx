@@ -103,12 +103,16 @@ function SidePanelContent() {
               : "e.g., 'How do I join this hackathon?'"
           }
           buttonText={guidance ? "Send" : "Guide Me"}
-          onNext={
-            guidance ? () => handleStartGuidance(true, "Next step") : undefined
-          }
         />
 
-        {guidance && <ResponseDisplay guidance={guidance} onSpeak={speak} />}
+        {guidance && (
+          <ResponseDisplay
+            guidance={guidance}
+            onSpeak={speak}
+            onNext={() => handleStartGuidance(true, "Next step")}
+            isLoading={isLoading}
+          />
+        )}
 
         {process.env.PLASMO_PUBLIC_DEV_MODE === "true" && (
           <Box

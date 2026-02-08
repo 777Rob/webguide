@@ -18,7 +18,7 @@ It doesn't try to be the captain; it's the navigator. You stay in the driver's s
 
 ## Key Features
 
-- **👁️ Visual Understanding**: Uses **Gemini 2.0 Flash** to analyze screenshots of your active tab. It understands layouts, menus, and context just like a human does.
+- **👁️ Visual Understanding**: Uses **Gemini 3.0 Flash** to analyze your active tab. It understands layouts, menus, and context just like a human does.
 - **📍 Contextual Guidance**: Tracks your progress across multiple pages. It knows when you've finished a step and automatically updates the plan.
 - **🗣️ Natural Voice**: Speaks instructions to you, so you can keep your eyes on the page (with a convenient "Pause Agent" button when you need quiet).
 - **⚡ User Agency**: You perform the actions. This ensures 100% accuracy and trust, especially for sensitive inputs like logins or payments.

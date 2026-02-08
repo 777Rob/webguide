@@ -25,8 +25,8 @@ export const setApiKey = async (key: string): Promise<void> => {
  */
 export const getAutoProgress = async (): Promise<boolean> => {
   const val = await storage.get(AUTO_PROGRESS_KEY)
-  // strict boolean check or string 'true'
-  return val === true || val === "true"
+  // Default to true if not set
+  return val === undefined || val === true || val === "true"
 }
 
 /**
