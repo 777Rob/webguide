@@ -53,11 +53,51 @@ export const useGuidance = ({ goal, onGuidanceUpdate, autoProgress }: UseGuidanc
 
     // Helper to speak text
     const speak = useCallback((text: string) => {
-        if ('speechSynthesis' in window) {
-            // Cancel any current speech first
-            window.speechSynthesis.cancel()
+        if (!('speechSynthesis' in window)) return
+
+        // Cancel any current speech first
+        window.speechSynthesis.cancel()
+
+        const speakWithVoice = (voices: SpeechSynthesisVoice[]) => {
             const utterance = new SpeechSynthesisUtterance(text)
+            
+            // Priority list for "human-like" voices
+            const preferredVoice = 
+                voices.find(v => v.name === "Google US English") || 
+                voices.find(v => v.name.includes("Zira")) ||
+                voices.find(v => v.name.includes("Google") && v.lang.startsWith("en")) ||
+                voices.find(v => v.name.includes("Natural") && v.lang.startsWith("en")) ||
+                voices.find(v => v.lang.startsWith("en"))
+
+            if (preferredVoice) {
+                utterance.voice = preferredVoice
+                console.log("WebGuide: Speaking with voice:", preferredVoice.name)
+                
+                // Slight tweaks for specific Google voice
+                if (preferredVoice.name === "Google US English") {
+                   utterance.rate = 1.0 // Normal speed
+                   utterance.pitch = 1.0
+                }
+            } else {
+                console.log("WebGuide: Using default voice")
+            }
+
             window.speechSynthesis.speak(utterance)
+        }
+
+        const voices = window.speechSynthesis.getVoices()
+        if (voices.length > 0) {
+            speakWithVoice(voices)
+        } else {
+            console.log("WebGuide: Voices not loaded yet, waiting for onvoiceschanged...")
+            window.speechSynthesis.onvoiceschanged = () => {
+                const updatedVoices = window.speechSynthesis.getVoices()
+                if (updatedVoices.length > 0) {
+                    speakWithVoice(updatedVoices)
+                    // Cleanup listener to avoid re-triggering
+                    window.speechSynthesis.onvoiceschanged = null 
+                }
+            }
         }
     }, [])
 
