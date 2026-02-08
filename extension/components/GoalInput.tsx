@@ -17,6 +17,7 @@ interface GoalInputProps {
   onSubmit: () => void
   isLoading: boolean
   isListening: boolean
+  isPermissionDenied?: boolean
   onToggleListening: () => void
   label: string
   placeholder: string
@@ -29,6 +30,7 @@ export const GoalInput = ({
   onSubmit,
   isLoading,
   isListening,
+  isPermissionDenied,
   onToggleListening,
   label,
   placeholder,
@@ -91,7 +93,9 @@ export const GoalInput = ({
         <Tooltip title={isListening ? "Stop listening" : "Start voice input"}>
           <IconButton
             onClick={onToggleListening}
-            color={isListening ? "error" : "default"}
+            color={
+              isPermissionDenied ? "warning" : isListening ? "error" : "default"
+            }
             sx={{
               position: "absolute",
               bottom: 4,
@@ -104,6 +108,26 @@ export const GoalInput = ({
           </IconButton>
         </Tooltip>
       </Paper>
+
+      {isPermissionDenied && (
+        <Button
+          variant="text"
+          color="warning"
+          size="small"
+          onClick={() =>
+            chrome.tabs.create({
+              url: chrome.runtime.getURL("tabs/mic-permission.html")
+            })
+          }
+          sx={{
+            fontSize: "0.75rem",
+            textTransform: "none",
+            justifyContent: "flex-start",
+            px: 1
+          }}>
+          ⚠️ Microphone blocked. Click to enable.
+        </Button>
+      )}
 
       <Button
         variant="contained"

@@ -21,6 +21,7 @@ function SidePanelContent() {
     autoProgress,
     isLoading,
     isListening,
+    isPermissionDenied,
     isPaused,
     handleStartGuidance,
     handleReset,
@@ -91,6 +92,7 @@ function SidePanelContent() {
           }
           isLoading={isLoading}
           isListening={isListening}
+          isPermissionDenied={isPermissionDenied}
           onToggleListening={toggleListening}
           label={
             guidance ? "Ask a follow-up or update status" : "What is your goal?"

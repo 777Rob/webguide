@@ -7,9 +7,10 @@ interface UseSpeechRecognitionProps {
 
 export const useSpeechRecognition = ({ onResult, onError }: UseSpeechRecognitionProps) => {
     const [isListening, setIsListening] = useState(false)
+    const [isPermissionDenied, setIsPermissionDenied] = useState(false) // New state
     const recognitionRef = useRef<any>(null)
 
-    // Use refs to keep callbacks stable in the effect
+    // Use refs to keep callbacks stable
     const onResultRef = useRef(onResult)
     const onErrorRef = useRef(onError)
 
@@ -18,10 +19,20 @@ export const useSpeechRecognition = ({ onResult, onError }: UseSpeechRecognition
         onErrorRef.current = onError
     }, [onResult, onError])
 
-    useEffect(() => {
+    const startListening = useCallback(() => {
+        setIsPermissionDenied(false) // Reset on retry
         const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
-        if (SpeechRecognition) {
-            const recognition = new SpeechRecognition()
+        if (!SpeechRecognition) {
+            console.error("Voice input not supported")
+            alert("Voice input not supported in this browser.")
+            return
+        }
+
+        // Initialize on demand if not already or if previous instance had issues
+        let recognition = recognitionRef.current
+
+        if (!recognition) {
+            recognition = new SpeechRecognition()
             recognition.lang = 'en-US'
             recognition.interimResults = false
             recognition.maxAlternatives = 1
@@ -33,38 +44,30 @@ export const useSpeechRecognition = ({ onResult, onError }: UseSpeechRecognition
             }
 
             recognition.onerror = (event: any) => {
-                console.error("Speech recognition error", event && event.error)
+                console.error("Speech recognition error", event.error)
                 setIsListening(false)
-                if (onErrorRef.current) onErrorRef.current(event && event.error)
+                
+                if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+                    setIsPermissionDenied(true)
+                }
+
+                if (onErrorRef.current) onErrorRef.current(event.error)
             }
 
             recognition.onend = () => {
                 setIsListening(false)
             }
-
+            
             recognitionRef.current = recognition
-        }
-    }, []) // Empty dependency array ensures initialization only happens once
-
-    const startListening = useCallback(() => {
-        if (!recognitionRef.current) {
-            // Try re-initializing if it failed or wasn't supported initially? 
-            // For now, just alert.
-            const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
-            if (!SpeechRecognition) {
-                console.error("Voice input not supported")
-                alert("Voice input not supported in this browser")
-                return
-            }
         }
 
         try {
-            if (recognitionRef.current) {
-                recognitionRef.current.start()
-                setIsListening(true)
-            }
+            recognition.start()
+            setIsListening(true)
         } catch (e) {
             console.error("Failed to start recognition", e)
+             // Sometimes it throws if already started
+             if (onErrorRef.current) onErrorRef.current(e)
         }
     }, [])
 
@@ -85,6 +88,7 @@ export const useSpeechRecognition = ({ onResult, onError }: UseSpeechRecognition
 
     return {
         isListening,
+        isPermissionDenied, // Expose this
         toggleListening,
         startListening,
         stopListening

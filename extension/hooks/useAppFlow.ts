@@ -44,65 +44,66 @@ export const useAppFlow = () => {
     autoProgress
   })
 
-  const { isListening, toggleListening } = useSpeechRecognition({
-    onResult: (transcript) => {
-      if (guidance) {
-        setChatInput(transcript)
-      } else {
-        setGoal(transcript)
-      }
-    },
-    onError: (err) => console.error("Speech error", err)
-  })
-
-  // --- Handlers ---
-  const handleStartGuidance = useCallback(
-    async (isUpdate: boolean, customPrompt?: string) => {
-      if (!isUpdate) {
-        setGuidance(null)
-        await handleGuideMe(null, false)
-      } else {
-        await handleGuideMe(guidance, true, customPrompt)
-        setChatInput("")
-      }
-    },
-    [guidance, handleGuideMe, setGuidance]
-  )
-
-  const handleReset = useCallback(() => {
-    stopSpeaking()
-    setGoal("")
-    setChatInput("")
-    setGuidance(null)
-  }, [setGoal, setGuidance, stopSpeaking])
-
-  const openOptions = useCallback(() => {
-    chrome.runtime.openOptionsPage()
-  }, [])
-
-  return {
-    // State
-    goal,
-    setGoal,
-    guidance,
-    setGuidance,
-    chatInput,
-    setChatInput,
-    hasKey,
-    autoProgress,
+    const { isListening, isPermissionDenied, toggleListening } = useSpeechRecognition({
+        onResult: (transcript) => {
+          if (guidance) {
+            setChatInput(transcript)
+          } else {
+            setGoal(transcript)
+          }
+        },
+        onError: (err) => console.error("Speech error", err)
+      })
     
-    // Status
-    isLoading,
-    isListening,
-    isPaused,
-
-    // Actions
-    handleStartGuidance,
-    handleReset,
-    openOptions,
-    toggleListening,
-    togglePause,
-    speak,
-    sendOverlaysToContent
-  }
-}
+      // --- Handlers ---
+      const handleStartGuidance = useCallback(
+        async (isUpdate: boolean, customPrompt?: string) => {
+          if (!isUpdate) {
+            setGuidance(null)
+            await handleGuideMe(null, false)
+          } else {
+            await handleGuideMe(guidance, true, customPrompt)
+            setChatInput("")
+          }
+        },
+        [guidance, handleGuideMe, setGuidance]
+      )
+    
+      const handleReset = useCallback(() => {
+        stopSpeaking()
+        setGoal("")
+        setChatInput("")
+        setGuidance(null)
+      }, [setGoal, setGuidance, stopSpeaking])
+    
+      const openOptions = useCallback(() => {
+        chrome.runtime.openOptionsPage()
+      }, [])
+    
+      return {
+        // State
+        goal,
+        setGoal,
+        guidance,
+        setGuidance,
+        chatInput,
+        setChatInput,
+        hasKey,
+        autoProgress,
+        
+        // Status
+        isLoading,
+        isListening,
+        isPermissionDenied, // Expose
+        isPaused,
+    
+        // Actions
+        handleStartGuidance,
+        handleReset,
+        openOptions,
+        toggleListening,
+        togglePause,
+        speak,
+        sendOverlaysToContent
+      }
+    }
