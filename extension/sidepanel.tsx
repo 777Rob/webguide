@@ -130,9 +130,28 @@ function SidePanelContent() {
               color="warning"
               size="small"
               fullWidth
-              onClick={handleTestOverlay}>
+              onClick={handleTestOverlay}
+              sx={{ mb: 2 }}>
               Test Visual Arrow
             </Button>
+
+            {guidance && (
+              <Box
+                sx={{
+                  maxHeight: 200,
+                  overflow: "auto",
+                  bgcolor: "grey.100",
+                  p: 1,
+                  borderRadius: 1
+                }}>
+                <Typography
+                  variant="caption"
+                  component="pre"
+                  sx={{ whiteSpace: "pre-wrap", fontSize: "0.65rem" }}>
+                  {JSON.stringify(guidance, null, 2)}
+                </Typography>
+              </Box>
+            )}
           </Box>
         )}
       </Box>
