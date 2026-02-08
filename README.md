@@ -1,3 +1,5 @@
+![WebGuide Logo](assets/Logo_Background.jpeg)
+
 # WebGuide: Your AI Co-Pilot for the Web
 
 **WebGuide** is a Chrome extension that helps you navigate any website and achieve your goals **without taking control away from you**.
@@ -20,6 +22,7 @@ It doesn't try to be the captain; it's the navigator. You stay in the driver's s
 - **📍 Contextual Guidance**: Tracks your progress across multiple pages. It knows when you've finished a step and automatically updates the plan.
 - **🗣️ Natural Voice**: Speaks instructions to you, so you can keep your eyes on the page (with a convenient "Pause Agent" button when you need quiet).
 - **⚡ User Agency**: You perform the actions. This ensures 100% accuracy and trust, especially for sensitive inputs like logins or payments.
+- **🔒 Privacy-First Design**: All processing happens locally or directly via your browser. Extension sends requests **directly** to Google's Gemini API using the key you provide with no third-party in between.
 
 ## Getting Started
 
