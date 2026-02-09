@@ -1,8 +1,10 @@
 ![WebGuide Logo](assets/Logo_Background.jpeg)
 
-# WebGuide: Your AI Co-Pilot for the Web
+# WebGuide: Your AI Guide for the Web
 
 **WebGuide** is a Chrome extension that helps you navigate any website and achieve your goals **without taking control away from you**.
+
+[**Visit the Website**](https://webguide-ten.vercel.app/)
 
 ## Philosophy: Guide, Don't Take Over
 
