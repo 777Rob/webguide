@@ -1,0 +1,209 @@
+
+> web-guide@0.1.0 build
+> next build
+
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of C:\Users\rceka\package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * C:\Users\rceka\OneDrive\Desktop\Coding2\webguide\website\package-lock.json
+
+▲ Next.js 16.1.6 (Turbopack)
+
+  Creating an optimized production build ...
+
+> Build error occurred
+Error: Turbopack build failed with 7 errors:
+./OneDrive/Desktop/Coding2/webguide/website/app/page.tsx:16:1
+Module not found: Can't resolve '@mui/icons-material/Download'
+[0m [90m 14 |[39m } [36mfrom[39m [32m"@mui/material"[39m[33m;[39m
+ [90m 15 |[39m [36mimport[39m [33mExpandMoreIcon[39m [36mfrom[39m [32m"@mui/icons-material/ExpandMore"[39m[33m;[39m
+[31m[1m>[22m[39m[90m 16 |[39m [36mimport[39m [33mDownloadIcon[39m [36mfrom[39m [32m"@mui/icons-material/Download"[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 17 |[39m [36mimport[39m [33mPlayCircleOutlineIcon[39m [36mfrom[39m [32m"@mui/icons-material/PlayCircleOutline"[39m[33m;[39m
+ [90m 18 |[39m
+ [90m 19 |[39m [36mexport[39m [36mdefault[39m [36mfunction[39m [33mHome[39m() {[0m
+
+
+
+Import traces:
+  Client Component Browser:
+    ./OneDrive/Desktop/Coding2/webguide/website/app/page.tsx [Client Component Browser]
+    ./OneDrive/Desktop/Coding2/webguide/website/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./OneDrive/Desktop/Coding2/webguide/website/app/page.tsx [Client Component SSR]
+    ./OneDrive/Desktop/Coding2/webguide/website/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./OneDrive/Desktop/Coding2/webguide/website/app/page.tsx:15:1
+Module not found: Can't resolve '@mui/icons-material/ExpandMore'
+[0m [90m 13 |[39m   [33mPaper[39m[33m,[39m
+ [90m 14 |[39m } [36mfrom[39m [32m"@mui/material"[39m[33m;[39m
+[31m[1m>[22m[39m[90m 15 |[39m [36mimport[39m [33mExpandMoreIcon[39m [36mfrom[39m [32m"@mui/icons-material/ExpandMore"[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 16 |[39m [36mimport[39m [33mDownloadIcon[39m [36mfrom[39m [32m"@mui/icons-material/Download"[39m[33m;[39m
+ [90m 17 |[39m [36mimport[39m [33mPlayCircleOutlineIcon[39m [36mfrom[39m [32m"@mui/icons-material/PlayCircleOutline"[39m[33m;[39m
+ [90m 18 |[39m[0m
+
+
+
+Import traces:
+  Client Component Browser:
+    ./OneDrive/Desktop/Coding2/webguide/website/app/page.tsx [Client Component Browser]
+    ./OneDrive/Desktop/Coding2/webguide/website/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./OneDrive/Desktop/Coding2/webguide/website/app/page.tsx [Client Component SSR]
+    ./OneDrive/Desktop/Coding2/webguide/website/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./OneDrive/Desktop/Coding2/webguide/website/app/page.tsx:4:1
+Module not found: Can't resolve '@mui/material'
+[0m [90m  2 |[39m
+ [90m  3 |[39m [36mimport[39m [33m*[39m [36mas[39m [33mReact[39m [36mfrom[39m [32m"react"[39m[33m;[39m
+[31m[1m>[22m[39m[90m  4 |[39m [36mimport[39m {
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m  5 |[39m   [33mContainer[39m[33m,[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m  6 |[39m   [33mTypography[39m[33m,[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m  7 |[39m   [33mButton[39m[33m,[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m  8 |[39m   [33mAccordion[39m[33m,[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m  9 |[39m   [33mAccordionSummary[39m[33m,[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m 10 |[39m   [33mAccordionDetails[39m[33m,[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m 11 |[39m   [33mBox[39m[33m,[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m 12 |[39m   [33mStack[39m[33m,[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m 13 |[39m   [33mPaper[39m[33m,[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m 14 |[39m } [36mfrom[39m [32m"@mui/material"[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 15 |[39m [36mimport[39m [33mExpandMoreIcon[39m [36mfrom[39m [32m"@mui/icons-material/ExpandMore"[39m[33m;[39m
+ [90m 16 |[39m [36mimport[39m [33mDownloadIcon[39m [36mfrom[39m [32m"@mui/icons-material/Download"[39m[33m;[39m
+ [90m 17 |[39m [36mimport[39m [33mPlayCircleOutlineIcon[39m [36mfrom[39m [32m"@mui/icons-material/PlayCircleOutline"[39m[33m;[39m[0m
+
+
+
+Import traces:
+  Client Component Browser:
+    ./OneDrive/Desktop/Coding2/webguide/website/app/page.tsx [Client Component Browser]
+    ./OneDrive/Desktop/Coding2/webguide/website/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./OneDrive/Desktop/Coding2/webguide/website/app/page.tsx [Client Component SSR]
+    ./OneDrive/Desktop/Coding2/webguide/website/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./OneDrive/Desktop/Coding2/webguide/website/app/providers.tsx:3:1
+Module not found: Can't resolve '@mui/material-nextjs/v13-appRouter'
+[0m [90m 1 |[39m [32m"use client"[39m[33m;[39m
+ [90m 2 |[39m
+[31m[1m>[22m[39m[90m 3 |[39m [36mimport[39m { [33mAppRouterCacheProvider[39m } [36mfrom[39m [32m"@mui/material-nextjs/v13-appRouter"[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 4 |[39m [36mimport[39m { [33mThemeProvider[39m } [36mfrom[39m [32m"@mui/material/styles"[39m[33m;[39m
+ [90m 5 |[39m [36mimport[39m [33mCssBaseline[39m [36mfrom[39m [32m"@mui/material/CssBaseline"[39m[33m;[39m
+ [90m 6 |[39m [36mimport[39m theme [36mfrom[39m [32m"../src/theme"[39m[33m;[39m[0m
+
+
+
+Import trace:
+  Server Component:
+    ./OneDrive/Desktop/Coding2/webguide/website/app/providers.tsx
+    ./OneDrive/Desktop/Coding2/webguide/website/app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./OneDrive/Desktop/Coding2/webguide/website/app/providers.tsx:5:1
+Module not found: Can't resolve '@mui/material/CssBaseline'
+[0m [90m 3 |[39m [36mimport[39m { [33mAppRouterCacheProvider[39m } [36mfrom[39m [32m"@mui/material-nextjs/v13-appRouter"[39m[33m;[39m
+ [90m 4 |[39m [36mimport[39m { [33mThemeProvider[39m } [36mfrom[39m [32m"@mui/material/styles"[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m [33mCssBaseline[39m [36mfrom[39m [32m"@mui/material/CssBaseline"[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 6 |[39m [36mimport[39m theme [36mfrom[39m [32m"../src/theme"[39m[33m;[39m
+ [90m 7 |[39m
+ [90m 8 |[39m [36mexport[39m [36mdefault[39m [36mfunction[39m [33mProviders[39m({ children }[33m:[39m { children[33m:[39m [33mReact[39m[33m.[39m[33mReactNode[39m }) {[0m
+
+
+
+Import trace:
+  Server Component:
+    ./OneDrive/Desktop/Coding2/webguide/website/app/providers.tsx
+    ./OneDrive/Desktop/Coding2/webguide/website/app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./OneDrive/Desktop/Coding2/webguide/website/app/providers.tsx:4:1
+Module not found: Can't resolve '@mui/material/styles'
+[0m [90m 2 |[39m
+ [90m 3 |[39m [36mimport[39m { [33mAppRouterCacheProvider[39m } [36mfrom[39m [32m"@mui/material-nextjs/v13-appRouter"[39m[33m;[39m
+[31m[1m>[22m[39m[90m 4 |[39m [36mimport[39m { [33mThemeProvider[39m } [36mfrom[39m [32m"@mui/material/styles"[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 5 |[39m [36mimport[39m [33mCssBaseline[39m [36mfrom[39m [32m"@mui/material/CssBaseline"[39m[33m;[39m
+ [90m 6 |[39m [36mimport[39m theme [36mfrom[39m [32m"../src/theme"[39m[33m;[39m
+ [90m 7 |[39m[0m
+
+
+
+Import trace:
+  Server Component:
+    ./OneDrive/Desktop/Coding2/webguide/website/app/providers.tsx
+    ./OneDrive/Desktop/Coding2/webguide/website/app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./OneDrive/Desktop/Coding2/webguide/website/src/theme.ts:1:1
+Module not found: Can't resolve '@mui/material/styles'
+[0m[31m[1m>[22m[39m[90m 1 |[39m [36mimport[39m { createTheme } [36mfrom[39m [32m'@mui/material/styles'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 2 |[39m [36mimport[39m { [33mRoboto[39m } [36mfrom[39m [32m'next/font/google'[39m[33m;[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [36mconst[39m roboto [33m=[39m [33mRoboto[39m({[0m
+
+
+
+Import traces:
+  Client Component Browser:
+    ./OneDrive/Desktop/Coding2/webguide/website/src/theme.ts [Client Component Browser]
+    ./OneDrive/Desktop/Coding2/webguide/website/app/providers.tsx [Client Component Browser]
+    ./OneDrive/Desktop/Coding2/webguide/website/app/providers.tsx [Server Component]
+    ./OneDrive/Desktop/Coding2/webguide/website/app/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./OneDrive/Desktop/Coding2/webguide/website/src/theme.ts [Client Component SSR]
+    ./OneDrive/Desktop/Coding2/webguide/website/app/providers.tsx [Client Component SSR]
+    ./OneDrive/Desktop/Coding2/webguide/website/app/providers.tsx [Server Component]
+    ./OneDrive/Desktop/Coding2/webguide/website/app/layout.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (./OneDrive/Desktop/Coding2/webguide/website/app/page.tsx:16:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./OneDrive/Desktop/Coding2/webguide/website/app/page.tsx:15:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./OneDrive/Desktop/Coding2/webguide/website/app/page.tsx:4:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./OneDrive/Desktop/Coding2/webguide/website/app/providers.tsx:3:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./OneDrive/Desktop/Coding2/webguide/website/app/providers.tsx:5:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./OneDrive/Desktop/Coding2/webguide/website/app/providers.tsx:4:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./OneDrive/Desktop/Coding2/webguide/website/src/theme.ts:1:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
