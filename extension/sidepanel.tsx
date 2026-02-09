@@ -84,6 +84,15 @@ function SidePanelContent() {
           onTogglePause={togglePause}
         />
 
+        {!guidance && (
+          <Typography
+            variant="h6"
+            align="center"
+            sx={{ fontWeight: 600, color: "text.primary" }}>
+            Enter your goal to start guidance
+          </Typography>
+        )}
+
         <GoalInput
           value={guidance ? chatInput : goal}
           onChange={guidance ? setChatInput : setGoal}

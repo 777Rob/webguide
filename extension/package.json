@@ -1,7 +1,7 @@
 {
-  "name": "extension2",
-  "displayName": "Extension2",
-  "version": "0.0.1",
+  "name": "webguide",
+  "displayName": "WebGuide",
+  "version": "0.0.2",
   "description": "A basic Plasmo extension.",
   "author": "Plasmo Corp. <foss@plasmo.com>",
   "scripts": {
